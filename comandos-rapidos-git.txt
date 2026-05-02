@@ -1,0 +1,15 @@
+# Referência rápida — Git local
+git status
+git add .
+git commit -m "mensagem"
+git log --oneline -10
+
+# Remoto
+git remote -v
+git push origin main
+git pull --rebase
+
+# Branch
+git branch
+git checkout -b nome-da-branch
+git merge nome-da-branch
