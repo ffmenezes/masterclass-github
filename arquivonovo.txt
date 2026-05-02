@@ -1,5 +1,0 @@
-branch main alterado
-
-API = sb_secret_123456
-
-Nova linha adicionada.
