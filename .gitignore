@@ -1,0 +1,24 @@
+# Ambiente e segredos
+.env
+.env.*
+!.env.example
+
+# SO
+.DS_Store
+Thumbs.db
+
+# Editores / IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Python (se usar scripts locais)
+__pycache__/
+*.py[cod]
+.venv/
+
+# Logs e temporários
+*.log
+*.tmp
+
+.tmp
