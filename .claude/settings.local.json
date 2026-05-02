@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where ffmpeg *)",
+      "Bash(where python *)",
+      "Bash(where py *)",
+      "Bash(python -c \"import nemo.collections.asr as nemo_asr; import torch; print\\('nemo OK, torch', torch.__version__, 'cuda', torch.cuda.is_available\\(\\)\\)\")",
+      "Bash(nvidia-smi)",
+      "Bash(python *)",
+      "Bash(PYTHONUNBUFFERED=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python -X faulthandler scripts/transcribe_videos_parakeet.py --videos-dir videos --out-dir transcripts --srt --long-form)"
+    ]
+  }
+}

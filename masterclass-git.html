@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masterclass Git & GitHub para Vibecoders</title>
+<style>
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7f6f2;
+    --bg-tertiary: #ebeae3;
+    --text-primary: #1a1a18;
+    --text-secondary: #5a5a55;
+    --text-tertiary: #8a8a83;
+    --border-tertiary: rgba(0, 0, 0, 0.1);
+    --border-secondary: rgba(0, 0, 0, 0.18);
+    --warning: #BA7517;
+    --info: #185FA5;
+    --info-dark: #0C447C;
+    --teal: #0F6E56;
+    --teal-dark: #085041;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "SF Mono", Monaco, Menlo, Consolas, "Liberation Mono", monospace;
+    --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1a1a18;
+      --bg-secondary: #232320;
+      --bg-tertiary: #2c2c2a;
+      --text-primary: #f0efe9;
+      --text-secondary: #b5b3a9;
+      --text-tertiary: #8a8a83;
+      --border-tertiary: rgba(255, 255, 255, 0.12);
+      --border-secondary: rgba(255, 255, 255, 0.22);
+      --info: #85B7EB;
+      --info-dark: #B5D4F4;
+      --teal: #5DCAA5;
+      --teal-dark: #9FE1CB;
+      --warning: #EF9F27;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  .page-header {
+    margin-bottom: 24px;
+  }
+
+  .page-eyebrow {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0 0 6px;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .mm-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  @media (max-width: 720px) {
+    .mm-wrap { grid-template-columns: 1fr; }
+    .page { padding: 16px; }
+  }
+
+  .mm-tree {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    position: sticky;
+    top: 16px;
+  }
+
+  @media (max-width: 720px) {
+    .mm-tree { position: static; }
+  }
+
+  .mm-root {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    padding: 8px 12px;
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+  }
+
+  .mm-node {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    margin: 3px 0 3px 14px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s, border-color 0.15s;
+    border: 0.5px solid transparent;
+    position: relative;
+  }
+
+  .mm-node::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    width: 8px;
+    height: 0.5px;
+    background: var(--border-tertiary);
+  }
+
+  .mm-node:hover {
+    background: var(--bg-primary);
+    border-color: var(--border-tertiary);
+  }
+
+  .mm-node.active {
+    background: var(--bg-primary);
+    border-color: var(--border-secondary);
+  }
+
+  .mm-num {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    min-width: 18px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mm-title {
+    flex: 1;
+    color: var(--text-primary);
+  }
+
+  .mm-star {
+    color: var(--warning);
+    font-size: 11px;
+  }
+
+  .mm-divider {
+    height: 0.5px;
+    background: var(--border-tertiary);
+    margin: 10px 0;
+  }
+
+  .mm-panel {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    min-height: 580px;
+  }
+
+  .mm-eyebrow {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .mm-h {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0 0 16px;
+    line-height: 1.3;
+  }
+
+  .mm-sub-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mm-sub {
+    font-size: 13px;
+    color: var(--text-primary);
+    padding: 8px 12px 8px 22px;
+    position: relative;
+    line-height: 1.5;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    border: 0.5px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .mm-sub::before {
+    content: "›";
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    color: var(--text-tertiary);
+    transition: transform 0.15s;
+  }
+
+  .mm-sub:hover {
+    background: var(--bg-secondary);
+  }
+
+  .mm-sub.open {
+    background: var(--bg-secondary);
+    border-color: var(--border-tertiary);
+  }
+
+  .mm-sub.open::before {
+    transform: rotate(90deg);
+  }
+
+  .mm-sub-card {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 14px;
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-md);
+  }
+
+  .mm-sub.open .mm-sub-card {
+    display: block;
+  }
+
+  .mm-card-prose {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .mm-card-cmd {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    display: block;
+    word-break: break-word;
+    white-space: pre;
+    margin-top: 10px;
+    overflow-x: auto;
+  }
+
+  .mm-img-wrap {
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+  }
+
+  .mm-sub-card .mm-img-wrap {
+    margin-top: 0;
+  }
+
+  .mm-img-cap {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+
+  .mm-cat {
+    margin-bottom: 18px;
+  }
+
+  .mm-cat-h {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 0.5px solid var(--border-tertiary);
+  }
+
+  .mm-cmd-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .mm-cmd-table td {
+    padding: 6px 0;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .mm-cmd-table td:first-child {
+    padding-right: 12px;
+    white-space: nowrap;
+  }
+
+  .mm-cmd-code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    padding: 3px 6px;
+    border-radius: var(--radius-md);
+  }
+
+  .mm-cmd-desc {
+    color: var(--text-secondary);
+  }
+
+  .mm-flow-text-main { fill: var(--info-dark); }
+  .mm-flow-text-feat { fill: var(--teal-dark); }
+  .mm-flow-line-main { stroke: var(--info); }
+  .mm-flow-dot-main { fill: var(--info); }
+  .mm-flow-line-feat { stroke: var(--teal); }
+  .mm-flow-dot-feat { fill: var(--teal); }
+
+  .mm-sub-card .mm-img-wrap + .mm-img-wrap {
+    margin-top: 12px;
+  }
+
+  .mm-img-zoom {
+    cursor: zoom-in;
+    border-radius: var(--radius-md);
+    transition: box-shadow 0.15s;
+  }
+
+  .mm-img-zoom:hover {
+    box-shadow: 0 0 0 2px var(--border-secondary);
+  }
+
+  .mm-img-zoom:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--info);
+  }
+
+  .mm-img-hint {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin: 8px 0 0;
+  }
+
+  .mm-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+  }
+
+  .mm-lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mm-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    cursor: zoom-out;
+  }
+
+  .mm-lightbox-inner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    width: min(96vw, 1400px);
+    height: min(92vh, 900px);
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 12px 12px;
+    padding-top: 44px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+  }
+
+  .mm-lightbox-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-bottom: 10px;
+    padding: 6px 8px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border-tertiary);
+  }
+
+  .mm-lightbox-toolbar button {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1;
+    min-width: 36px;
+    height: 34px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .mm-lightbox-toolbar button:hover {
+    background: var(--bg-tertiary);
+  }
+
+  .mm-lightbox-zoom-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    min-width: 52px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mm-lightbox-hint {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-left: auto;
+    max-width: 220px;
+    text-align: right;
+  }
+
+  .mm-lightbox-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    cursor: grab;
+    touch-action: pan-x pan-y;
+    user-select: none;
+  }
+
+  .mm-lightbox-scroll.is-dragging {
+    cursor: grabbing;
+  }
+
+  .mm-lightbox-scroll svg {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: none;
+  }
+
+  .mm-lightbox-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .mm-lightbox-close:hover {
+    background: var(--bg-tertiary);
+  }
+
+  .mm-gf-grid {
+    stroke: var(--border-tertiary);
+    stroke-width: 0.75;
+    stroke-dasharray: 4 6;
+    fill: none;
+    opacity: 0.85;
+  }
+
+  .mm-gf-legend-text { font-size: 10px; font-family: var(--font-sans); fill: var(--text-secondary); }
+  .mm-gf-tag { font-size: 9px; font-family: var(--font-sans); fill: var(--info-dark); }
+  .mm-gf-line-master { stroke: var(--info); stroke-width: 2; fill: none; }
+  .mm-gf-dot-master { fill: var(--info); }
+  .mm-gf-line-hotfix { stroke: var(--warning); stroke-width: 2; fill: none; }
+  .mm-gf-dot-hotfix { fill: var(--warning); }
+  .mm-gf-line-release { stroke: #0e7490; stroke-width: 2; fill: none; }
+  .mm-gf-dot-release { fill: #0e7490; }
+  .mm-gf-line-develop { stroke: #7b68b8; stroke-width: 2; fill: none; }
+  .mm-gf-dot-develop { fill: #7b68b8; }
+  .mm-gf-line-feature { stroke: #15803d; stroke-width: 2; fill: none; }
+  .mm-gf-dot-feature { fill: #15803d; }
+  .mm-gf-merge { stroke: var(--text-tertiary); stroke-width: 1.25; fill: none; opacity: 0.9; }
+
+  .mm-gf-legend-develop { fill: #7b68b8; }
+  .mm-gf-legend-feature { fill: #15803d; }
+  .mm-gf-legend-release { fill: #0e7490; }
+
+  @media (prefers-color-scheme: dark) {
+    .mm-gf-tag { fill: var(--info); }
+    .mm-gf-line-develop { stroke: #b196ea; }
+    .mm-gf-dot-develop { fill: #b196ea; }
+    .mm-gf-line-feature { stroke: #4ade80; }
+    .mm-gf-dot-feature { fill: #4ade80; }
+    .mm-gf-line-release { stroke: #22d3ee; }
+    .mm-gf-dot-release { fill: #22d3ee; }
+    .mm-gf-legend-develop { fill: #b196ea; }
+    .mm-gf-legend-feature { fill: #4ade80; }
+    .mm-gf-legend-release { fill: #22d3ee; }
+  }
+
+  .ts { font-size: 12px; font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Playbook</div>
+    <h1 class="page-title">Masterclass Git &amp; GitHub para Vibecoders</h1>
+    <p class="page-subtitle">Mapa mental interativo · clique nos blocos e nos subtópicos para expandir</p>
+  </div>
+  <div class="mm-wrap">
+    <div class="mm-tree">
+      <div class="mm-root">Masterclass Git &amp; GitHub para Vibecoders</div>
+      <div id="mm-nodes"></div>
+      <div class="mm-divider"></div>
+      <div id="mm-appendix"></div>
+    </div>
+    <div class="mm-panel" id="mm-panel"></div>
+  </div>
+</div>
+
+<div id="mm-lightbox" class="mm-lightbox" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+  <div class="mm-lightbox-backdrop" id="mm-lightbox-backdrop"></div>
+  <button type="button" class="mm-lightbox-close" id="mm-lightbox-close" aria-label="Fechar ampliação">&times;</button>
+  <div class="mm-lightbox-inner" id="mm-lightbox-inner"></div>
+</div>
+
+<script>
+(function(){
+  const nodes = [
+    { n: 1, t: "Por que usar Git", star: false,
+      bullets: [
+        { t: "Os problemas de versionar código manualmente em pastas",
+          p: "Identifique no seu projeto atual quantas pastas com sufixo de versão você criou. Antes de começar qualquer projeto novo, decida que essa prática acabou." },
+        { t: "Os riscos específicos de programar com IA",
+          p: "Lembre dos momentos em que a IA quebrou código que estava funcionando. Esse padrão se repete e é o motivo central de aprender Git." },
+        { t: "As limitações do histórico nativo das ferramentas de IA",
+          p: "Reconheça que o histórico dessas ferramentas pode se perder ao trocar de máquina ou sessão. Não dá pra confiar nelas como única proteção." },
+        { t: "O que esta masterclass cobre",
+          p: "Use os blocos como roteiro de adoção progressiva, na medida em que seu projeto cresce em complexidade." }
+      ] },
+    { n: 2, t: "Conceitos fundamentais", star: false,
+      bullets: [
+        { t: "Diferença entre Git e GitHub",
+          p: "Git é a ferramenta que roda na sua máquina. GitHub é o serviço na nuvem onde o código fica hospedado. Quando ler documentação ou tutorial, sempre identifique de qual dos dois está se falando." },
+        { t: "Repositório, commit, branch e merge",
+          p: "Esses 4 conceitos são a base de tudo que vem depois. Reconheça cada um deles antes de aprender qualquer comando." },
+        { t: "Os comandos add, push e pull",
+          p: "É útil já gravar o vocabulário: add separa o que vai entrar no próximo commit, commit salva, push envia pro GitHub, pull traz de volta." },
+        { t: "Versionamento como linha do tempo navegável",
+          p: "Pense em commits como pontos numa linha do tempo que você pode visitar a qualquer momento. Essa imagem ajuda muito antes de chegar nos comandos de histórico." },
+        { t: "O que é controle de versão distribuído",
+          p: "Cada clone do repositório é uma cópia completa e independente. É por isso que Git funciona offline e por isso que ninguém depende de um servidor central pra trabalhar." }
+      ] },
+    { n: 3, t: "Instalação e configuração", star: false,
+      bullets: [
+        { t: "Como verificar se o Git já está instalado",
+          p: "Antes de instalar de novo, cheque se já tem.",
+          c: "git --version" },
+        { t: "Configurações iniciais: user.name, user.email, init.defaultBranch",
+          p: "Configure as 3 globais uma única vez, logo depois de instalar.",
+          c: "git config --global user.name \"seu nome\"\ngit config --global user.email \"seu@email.com\"\ngit config --global init.defaultBranch main" },
+        { t: "Criação da conta no GitHub",
+          p: "Use o mesmo email que você colocou no git config. Isso evita que seus commits fiquem desassociados do seu perfil." },
+        { t: "Diferença entre SSH e HTTPS",
+          p: "Gere uma chave SSH e adicione ao GitHub. Configura uma vez, esquece pra sempre — nunca mais digita credencial.",
+          c: "ssh-keygen -t ed25519 -C \"seu@email.com\"" },
+        { t: "Material de apoio para o passo a passo detalhado",
+          p: "Se travar em algo específico do seu sistema operacional, docs.github.com tem o passo a passo oficial." }
+      ] },
+    { n: 4, t: "Repositórios", star: false,
+      bullets: [
+        { t: "Como decidir o que vira um repositório",
+          p: "Um repositório é uma unidade de código com seu próprio histórico, suas próprias branches e suas próprias permissões. Cada projeto sério merece o seu — mas \"projeto\" pode ser interpretado de formas bem diferentes." },
+        { t: "Repositório público vs privado",
+          p: "Público: qualquer um na internet vê o código, faz fork, lê o histórico inteiro. Privado: só você e quem tiver acesso explícito. No GitHub os dois são gratuitos hoje. A escolha não é técnica, é estratégica — código com chave, lógica de negócio sensível ou cliente envolvido vai privado por padrão. Open source vai público por intenção." },
+        { t: "O que muda na prática entre os dois",
+          p: "Público entra no Google, em buscadores de código e nos crawlers que procuram chaves vazadas. Privado fica fora disso, mas \"privado\" não é \"seguro\": qualquer colaborador adicionado vê tudo, inclusive o histórico. Se vazou chave em repositório privado, considere que vazou — rotacione." },
+        { t: "Um repositório por projeto (poly-repo)",
+          p: "Cada aplicação, lib ou serviço vive num repositório próprio. Histórico isolado, deploys independentes, permissões granulares por contexto. É o caminho padrão e funciona bem pra maioria dos vibecoders." },
+        { t: "Monorepo: tudo em um único repositório",
+          p: "Frontend, backend, libs internas e infra convivem no mesmo repositório, geralmente em pastas separadas. Vantagem: mudança que afeta vários pedaços vai num único PR. Desvantagem: complexidade pra escalar (CI mais lento, permissões mais difíceis). Vale quando os projetos compartilham muito código ou são lançados juntos." },
+        { t: "Quando escolher poly-repo e quando escolher monorepo",
+          p: "Poly-repo é o default seguro: simples, escala bem, cada projeto tem seu ritmo. Monorepo faz sentido quando você tem várias partes que mudam juntas (ex: frontend + design system + backend de uma mesma plataforma). Comece poly-repo e migre se a dor aparecer — não o contrário." },
+        { t: "Repositório de configuração e infraestrutura",
+          p: "Vale ter um repositório separado pra Terraform, docker-compose, scripts de deploy, configurações compartilhadas. Não polui o código da aplicação e dá histórico próprio pra mudanças de infra." },
+        { t: "Repositório pessoal de notas e snippets",
+          p: "Padrão útil: um repositório privado só seu pra guardar notas técnicas, snippets reutilizáveis, configurações de ambiente. Vira sua memória externa, versionada e acessível de qualquer máquina." },
+        { t: "Criação de repositório pelo GitHub",
+          p: "Pra projetos novos, cria primeiro no GitHub e clona localmente — assim já sai com tudo conectado.",
+          c: "git clone git@github.com:user/repo.git" },
+        { t: "Quando clonar e quando começar do zero localmente",
+          p: "Se o projeto já existe na sua máquina, use git init e depois conecte ao remoto.",
+          c: "git init\ngit remote add origin git@github.com:user/repo.git" }
+      ] },
+    { n: 5, t: "Ciclo de commit", star: false,
+      bullets: [
+        { t: "O ciclo: status → add → commit → push",
+          p: "Esse é o ciclo central, executado depois de cada mudança que você quer salvar.",
+          c: "git status\ngit add .\ngit commit -m \"mensagem\"\ngit push" },
+        { t: "Uso do git status como checagem padrão",
+          p: "Ganha o hábito de rodar git status antes e depois de cada comando — vai te poupar muita confusão.",
+          c: "git status" },
+        { t: "Como escrever mensagens de commit úteis",
+          p: "Verbo no imperativo, descrevendo o que a mudança faz. O \"você do futuro\" agradece.",
+          c: "git commit -m \"adiciona validação de email no cadastro\"" },
+        { t: "O fluxo completo, do zero até o código no GitHub",
+          p: "A sequência completa quando você está subindo um projeto local pela primeira vez.",
+          c: "git init\ngit add .\ngit commit -m \"primeiro commit\"\ngit remote add origin <url>\ngit push -u origin main" },
+        { t: "Integração do ciclo no dia a dia de quem usa IA",
+          p: "Commite antes de cada prompt grande e depois de validar o resultado. Cada commit vira um ponto seguro pra voltar." },
+        { t: "O que ferramentas de IA automatizam do fluxo",
+          p: "Algumas ferramentas fazem add e commit automaticamente. Use, mas revise antes de dar push — o que sobe pro GitHub é sua responsabilidade." }
+      ] },
+    { n: 6, t: "Lendo diffs", star: false,
+      bullets: [
+        { t: "O que é um diff",
+          p: "Comparação entre duas versões de um arquivo: o que saiu, o que entrou e onde. Terminal, IDE e aba \"Files changed\" do PR mostram a mesma coisa — só mudam as cores." },
+        { t: "Linhas com − foram removidas, com + foram adicionadas",
+          p: "Não é \"bom\" ou \"ruim\": é só \"antes\" e \"depois\". Treine o olho pra bater nessa coluna primeiro." },
+        { t: "Os marcadores @@ ... @@ (cabeçalho de cada bloco)",
+          p: "Cada bloco de mudança é um hunk. O cabeçalho @@ -início,qtd +início,qtd @@ informa onde o trecho começa em cada versão. É o endereço da mudança." },
+        { t: "Linhas sem + ou − são contexto",
+          p: "Aparecem em volta da mudança pra dar âncora visual. Quando a IA mexe numa função, o contexto mostra se o encaixe faz sentido sem você precisar abrir o arquivo." },
+        { t: "Onde o diff aparece no fluxo",
+          p: "git diff mostra o que ainda não foi adicionado ao staging. git diff --staged mostra o que já está no staging. No GitHub, o diff do PR é a mesma leitura.",
+          c: "git diff\ngit diff --staged\ngit diff HEAD" },
+        { t: "Revisar diff antes de aceitar código de IA",
+          p: "O diff é a prova do que mudou — não o que o chat disse que mudou. Olhar o diff antes do commit evita merge às cegas e bug em produção." }
+      ] },
+    { n: 7, t: "Explorando repositórios com IA", star: false,
+      bullets: [
+        { t: "O problema de cair num repositório que você nunca viu",
+          p: "Repositório grande sem documentação consome horas só pra entender o que o projeto faz, como os módulos se conectam e onde encostar. Existe uma camada de ferramentas de IA que faz esse trabalho por você." },
+        { t: "DeepWiki — wiki gerado por IA, troca github.com por deepwiki.com",
+          p: "Cognition AI (mesma da Devin) gera wiki interativo de qualquer repositório público. Basta trocar github.com por deepwiki.com na URL. Mostra arquitetura, módulos principais e tem chat pra perguntar coisas tipo \"como funciona o auth aqui?\".",
+          c: "https://github.com/owner/repo\n→ https://deepwiki.com/owner/repo" },
+        { t: "Quando DeepWiki cabe melhor",
+          p: "Onboarding em projeto open source, avaliar uma lib antes de adotar, entender uma codebase de cliente que você acabou de pegar. Repositórios públicos saem de graça; privados pedem conta no Devin." },
+        { t: "GitNexus — knowledge graph navegável do código",
+          p: "github.com/abhigyanpatwari/GitNexus indexa o repositório como grafo de conhecimento (chamadas, dependências, clusters, fluxos de execução). Tem UI no browser e CLI com servidor MCP que pluga em Cursor, Claude Code e Codex pra dar contexto arquitetural pra IA." },
+        { t: "DeepWiki vs GitNexus, o resumo",
+          p: "DeepWiki é pra ler — gera documentação humana sobre o repositório. GitNexus é pra analisar — mapeia relações entre símbolos pra a IA não quebrar coisa que ela não enxerga. Os dois resolvem problemas diferentes; em projetos onde IA edita código de verdade, GitNexus + MCP melhora muito a precisão das edições." },
+        { t: "Como integrar no fluxo do dia a dia",
+          p: "DeepWiki: hábito de abrir antes de ler README de qualquer repo desconhecido. GitNexus: instalar globalmente, rodar gitnexus analyze no projeto e configurar MCP no Cursor/Claude Code uma vez. A partir daí, a IA passa a ter visão de impacto antes de editar.",
+          c: "npm install -g gitnexus\nnpx gitnexus analyze\nnpx gitnexus setup" }
+      ] },
+    { n: 8, t: ".gitignore e segurança", star: false,
+      bullets: [
+        { t: "Por que API keys vazam com frequência em repositórios públicos",
+          p: "Vale auditar seus repositórios públicos antes de continuar. Esse comando ajuda a procurar termos suspeitos no histórico.",
+          c: "git log -p | grep -i \"api_key\\|secret\\|password\"" },
+        { t: "O que é o .gitignore e como ele funciona",
+          p: "Crie o .gitignore antes do primeiro commit, sempre. É um arquivo de texto que lista o que o Git deve ignorar.",
+          c: "touch .gitignore" },
+        { t: "Os riscos de usar git add . sem .gitignore configurado",
+          p: "Sem .gitignore, o git add . pega tudo — incluindo .env, chaves e arquivos sensíveis. Configure o .gitignore primeiro." },
+        { t: "Templates prontos de .gitignore por linguagem e framework",
+          p: "Não escreva do zero. Use gitignore.io pra gerar o template inicial de acordo com sua stack.",
+          c: "curl -L https://gitignore.io/api/node,python,vscode > .gitignore" },
+        { t: "Arquivos que não devem ser versionados: .env, node_modules, secrets",
+          p: "Esses padrões são quase sempre necessários. Adicione no .gitignore antes de qualquer add.",
+          c: ".env\nnode_modules/\n*.key\n.DS_Store" },
+        { t: "O que fazer quando uma chave já foi vazada",
+          p: "Rotacione a chave imediatamente. Limpar o histórico do Git é mais lento e nem sempre resolve — a chave já saiu de casa." }
+      ] },
+    { n: 9, t: "Branches", star: false,
+      bullets: [
+        { t: "Sinais de que o projeto precisa de branches",
+          p: "Comece a usar branches quando alguém entrar no projeto, quando subir pra produção, ou quando algo deixar de ser experimento." },
+        { t: "Branch como linha de desenvolvimento isolada",
+          p: "Crie uma branch sempre que começar trabalho que não deve afetar o código principal.",
+          c: "git checkout -b feature/nome-da-feature" },
+        { t: "Fluxo: criar branch, trabalhar, fazer merge",
+          p: "O caminho completo: cria a branch, trabalha nela, valida, e só depois faz merge na main.",
+          c: "git checkout -b feat/x\n# trabalha, commita\ngit checkout main\ngit merge feat/x" },
+        { t: "Uso de branch para testar features sem afetar o código principal",
+          p: "Mantenha a main sempre estável. Qualquer mudança experimental vai pra branch.",
+          c: "git checkout -b experimento/teste" },
+        { t: "Uso de branches paralelas para comparar abordagens da IA",
+          p: "Quando a IA sugerir mais de um caminho, crie 2 branches a partir do mesmo ponto e teste as duas abordagens em paralelo.",
+          c: "git checkout -b abordagem-a\n# trabalha\ngit checkout main\ngit checkout -b abordagem-b" },
+        { t: "Como retornar a uma versão anterior estável",
+          p: "Quando precisar ver como estava antes, navegue pelo histórico e dê checkout no commit que quer inspecionar.",
+          c: "git log --oneline\ngit checkout <hash-do-commit>" },
+        { t: "Reverter alterações com git revert e git reset",
+          p: "Em código já compartilhado, use revert (cria um novo commit que desfaz). Localmente, reset funciona — e é destrutivo.",
+          c: "git revert <hash>\ngit reset --hard <hash>" }
+      ],
+      hasFlow: true },
+    { n: 10, t: "Colaboração e permissões", star: false,
+      bullets: [
+        { t: "Como adicionar colaboradores em um repositório",
+          p: "Quando trouxer um freelancer ou um dev pro projeto, adicione pelo settings → collaborators do repositório." },
+        { t: "O que é uma Organization e quando usar",
+          p: "A partir do segundo repositório com colaboradores, faz sentido criar uma Organization. É onde mora o controle granular de acessos." },
+        { t: "Times e os 5 níveis de permissão: read, triage, write, maintain, admin",
+          p: "Atribua sempre o menor nível necessário pra cada pessoa. Princípio de menor privilégio." },
+        { t: "Como atribuir permissões diferentes em repositórios diferentes",
+          p: "Crie times por função e atribua a repositórios específicos — assim a mesma pessoa pode ler um repo e escrever em outro." },
+        { t: "Pull Requests: o que são e como funcionam",
+          p: "Mesmo trabalhando sozinho, abrir PR é útil pra revisar o próprio código antes do merge. Vira um ritual de qualidade." },
+        { t: "Conflitos: o que são e como resolver",
+          p: "Quando dois caminhos modificam a mesma linha, o Git pede ajuda. Edite os arquivos marcados, depois feche o merge.",
+          c: "git status\n# edita arquivos com conflito\ngit add .\ngit commit" },
+        { t: "Code review básico",
+          p: "Antes de aprovar qualquer merge em projetos colaborativos, leia o diff do PR. Mesmo que seja você revisando você mesmo no dia seguinte." },
+        { t: "Submodules: repositórios dentro de repositórios",
+          p: "Quando uma parte do código vive em outro repo (uma lib sua, por exemplo), submodule resolve.",
+          c: "git submodule add <url-do-repo> <pasta>" },
+        { t: "Combinação de Organizations e submodules para permissões granulares",
+          p: "Configurando permissões por repo e usando submodules pra compor, dá pra ter freelancer que lê o código sem poder modificá-lo." },
+        { t: "Open source: fork, contribuição e reaproveitamento de projetos",
+          p: "Pra propor mudanças em projetos de terceiros, faz fork primeiro, trabalha na sua cópia, e abre PR de volta no repositório original." }
+      ] },
+    { n: 11, t: "Issues e Projects", star: false,
+      bullets: [
+        { t: "O que são Issues e por que usar",
+          p: "Issues são o canal nativo do GitHub pra registrar tarefas, bugs e ideias. Ficam atreladas ao código e ao histórico do projeto, sem precisar de Notion ou Trello em paralelo." },
+        { t: "Quando Issues fazem mais sentido que outras ferramentas",
+          p: "Toda vez que a tarefa tem ligação direta com código (bug a corrigir, feature a implementar, refactor planejado), Issue é o lugar mais natural. Pra gestão geral do negócio, ferramentas externas continuam servindo." },
+        { t: "Templates de Issue para padronizar bugs e features",
+          p: "Crie templates em .github/ISSUE_TEMPLATE/ pra que todo bug venha com passos pra reproduzir e toda feature venha com critério de aceite. Reduz ida e volta com colaboradores." },
+        { t: "Labels, milestones e assignees",
+          p: "Labels classificam (bug, feature, urgente). Milestones agrupam (release v1.0). Assignees deixam claro quem é dono. Use os 3 desde o início, mesmo solo." },
+        { t: "Linkando Issues a commits e PRs",
+          p: "Mencione #numero-da-issue na mensagem do commit ou no PR. Use \"Closes #42\" no PR pra fechar a Issue automaticamente quando o merge acontecer.",
+          c: "git commit -m \"corrige validação de email — closes #42\"" },
+        { t: "Projects: o kanban nativo do GitHub",
+          p: "Projects é um quadro kanban que vive no GitHub e puxa Issues e PRs automaticamente. Substitui Trello pra projetos de código com qualidade." },
+        { t: "Configurando colunas, views e automações",
+          p: "Crie colunas (Backlog, Em progresso, Review, Concluído). Configure automação pra mover cards quando a Issue muda de status. Vista de tabela ajuda priorização, vista de board ajuda execução." },
+        { t: "Issues e Projects para o vibecoder solo",
+          p: "Mesmo trabalhando sozinho, vale usar pra organizar ideias, bugs encontrados e features planejadas. Funciona como to-do list integrado ao código." }
+      ] },
+    { n: 12, t: "Fluxo diário", star: false,
+      bullets: [
+        { t: "Começar o dia com pull",
+          p: "Em projetos colaborativos, sempre puxe as últimas mudanças antes de começar a trabalhar. Evita conflitos desnecessários e garante que você não está partindo de uma base desatualizada.",
+          c: "git pull" },
+        { t: "Trabalhar em ciclos pequenos com commits frequentes",
+          p: "Cada bloco de trabalho concluído merece um commit. Commits pequenos e frequentes facilitam revisão, rollback e entendimento do histórico." },
+        { t: "Commit antes e depois de cada interação relevante com IA",
+          p: "Commite antes do prompt pra ter um ponto de retorno. Commite depois pra registrar o resultado validado. Essa disciplina vira rede de segurança." },
+        { t: "Terminar o dia com push",
+          p: "Antes de fechar o computador, dê push em tudo que está commitado. Backup automático na nuvem e o time vê o progresso.",
+          c: "git push" },
+        { t: "Revisar o histórico do dia antes de fechar",
+          p: "Rode git log pra ver o que você produziu. Ajuda a perceber se a sessão foi produtiva e a planejar o próximo dia.",
+          c: "git log --oneline --since=\"1 day ago\"" },
+        { t: "Hábitos que evitam dor de cabeça",
+          p: "git status antes de qualquer comando. Mensagens de commit claras. Branch separada pra cada feature. Push pelo menos uma vez por dia. Esses 4 hábitos resolvem 90% dos problemas." }
+      ] },
+    { n: 13, t: "Deploy automático", star: false,
+      bullets: [
+        { t: "O conceito: cada push vira um deploy",
+          p: "A ideia central do deploy automático é amarrar a plataforma de hospedagem ao repositório. Quando você dá push na main (ou em qualquer branch configurada), a aplicação atualiza sozinha." },
+        { t: "Vercel: o caminho mais rápido para Next.js e React",
+          p: "Conecte o repositório, escolha o framework, e em segundos sua aplicação está no ar com URL própria. Cada PR ganha uma preview URL automaticamente — útil pra mostrar pro cliente antes de mergear." },
+        { t: "Netlify: alternativa popular para sites estáticos e Jamstack",
+          p: "Funcionamento muito parecido com Vercel. Diferencial: forms nativos, funções serverless e integração robusta com CMS headless. Bom pra landing pages e sites de conteúdo." },
+        { t: "Cloudflare Pages: deploy global com edge",
+          p: "Hospedagem grátis com distribuição global pela rede da Cloudflare. Performance excelente, integração nativa com Workers (funções serverless no edge). Boa escolha quando latência importa." },
+        { t: "Railway: para apps com backend e banco",
+          p: "Quando o projeto não é só frontend — tem API, banco de dados, jobs em background — Railway hospeda tudo a partir do GitHub. Bom equilíbrio entre simplicidade e flexibilidade." },
+        { t: "Variáveis de ambiente e secrets",
+          p: "Nunca commite chaves no código. Cada plataforma tem painel próprio pra configurar variáveis de ambiente que ficam só no servidor. É o complemento natural do .gitignore." },
+        { t: "Preview deploys por branch",
+          p: "Configure pra que cada branch ou PR ganhe sua própria URL de preview. Permite testar uma feature antes do merge sem afetar a versão de produção." },
+        { t: "Quando configurar deploy automático",
+          p: "Logo depois de criar o repositório do projeto. Custa 5 minutos e elimina pra sempre o ritual manual de subir arquivos via FTP ou rebuild local." }
+      ] },
+    { n: 14, t: "GitHub Pages", star: false,
+      bullets: [
+        { t: "O que é GitHub Pages",
+          p: "É hospedagem de sites estáticos grátis, direto a partir de um repositório do GitHub. URL própria no formato user.github.io/repo, ou domínio customizado se quiser." },
+        { t: "Quando faz sentido usar Pages em vez de Vercel ou Netlify",
+          p: "Pra portfólio pessoal, documentação de projeto open source, landing simples ou qualquer coisa estática. Quando você não precisa de preview por branch, forms ou serverless functions." },
+        { t: "Como ativar Pages em um repositório",
+          p: "Settings → Pages → escolhe branch (geralmente main) e pasta (root ou /docs). Em segundos o site está no ar." },
+        { t: "Branch dedicada gh-pages para builds",
+          p: "Em projetos com build (React, Vue, Astro), o padrão é commitar o código fonte na main e o build gerado na branch gh-pages. Plataformas como GitHub Actions automatizam isso." },
+        { t: "Domínio customizado e HTTPS",
+          p: "Configure CNAME apontando pro seu domínio próprio. GitHub provê HTTPS via Let's Encrypt sem custo. Configura uma vez, esquece." },
+        { t: "Limites do GitHub Pages",
+          p: "Sites públicos por padrão (privado só em planos pagos), sem código server-side, sem banco de dados, banda de 100GB por mês. Pra a maioria dos casos pessoais, sobra." },
+        { t: "Casos de uso ideais para vibecoder",
+          p: "Portfólio, currículo online, documentação de uma lib que você criou, landing de validação de ideia, blog pessoal. Tudo grátis, sem cartão de crédito." }
+      ] },
+    { n: 15, t: "GitHub Actions", star: false,
+      bullets: [
+        { t: "O que é GitHub Actions",
+          p: "Automação que roda dentro do GitHub a cada evento (push, PR, agendamento, manual). Você define workflows em arquivos YAML dentro de .github/workflows/ e o GitHub executa em runners dele mesmo." },
+        { t: "Quando vale a pena adotar Actions",
+          p: "A partir do primeiro processo manual repetitivo. Se você está rodando o mesmo comando toda vez que dá push, é candidato natural a virar Action." },
+        { t: "Estrutura básica de um workflow",
+          p: "Todo workflow tem três partes: quando rodar (on), onde rodar (runs-on), e o que rodar (steps). Esses 3 elementos formam qualquer Action.",
+          c: "name: meu-workflow\non: [push]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: echo \"olá mundo\"" },
+        { t: "Exemplo prático: notificação no Discord a cada deploy",
+          p: "Configure um webhook no Discord, salve a URL nos secrets do GitHub, e dispare a cada push na main. Avisa o time que tem coisa nova no ar.",
+          c: "name: notifica-discord\non:\n  push:\n    branches: [main]\njobs:\n  notify:\n    runs-on: ubuntu-latest\n    steps:\n      - name: envia webhook\n        run: |\n          curl -H \"Content-Type: application/json\" \\\n            -d '{\"content\":\"🚀 deploy em main por ${{ github.actor }}\"}' \\\n            ${{ secrets.DISCORD_WEBHOOK }}" },
+        { t: "Exemplo prático: build e push de imagem para Docker Hub",
+          p: "Quando o projeto vai pra container, automatize o build e o push pro Docker Hub a cada release. Garante que a imagem publicada sempre bate com o código.",
+          c: "name: docker-build\non:\n  push:\n    tags: ['v*']\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: docker/login-action@v3\n        with:\n          username: ${{ secrets.DOCKERHUB_USER }}\n          password: ${{ secrets.DOCKERHUB_TOKEN }}\n      - uses: docker/build-push-action@v5\n        with:\n          push: true\n          tags: user/app:${{ github.ref_name }}" },
+        { t: "Exemplo prático: rodar testes a cada Pull Request",
+          p: "Bloqueia merge de PR que quebra os testes. Roda em segundos no runner do GitHub, sem precisar de servidor próprio.",
+          c: "name: testes\non: [pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 20 }\n      - run: npm ci\n      - run: npm test" },
+        { t: "Exemplo prático: cron job semanal",
+          p: "Rode tarefas em agenda fixa: limpar cache, gerar relatório, fazer backup. Tudo dentro do GitHub, sem precisar de servidor com cron.",
+          c: "on:\n  schedule:\n    - cron: '0 9 * * 1'  # toda segunda às 9h UTC" },
+        { t: "Secrets e variáveis no Actions",
+          p: "Nunca coloque tokens ou senhas direto no YAML. Use Settings → Secrets and variables → Actions pra cadastrar valores sensíveis e referencie via ${{ secrets.NOME }}." },
+        { t: "Marketplace: não reinvente a roda",
+          p: "Antes de escrever Action do zero, procure no GitHub Marketplace. Tem ações prontas pra deploy, notificação, lint, deploy em cloud, tudo que você imaginar." }
+      ] },
+    { n: 16, t: "Outros usos práticos (além de código)", star: false,
+      bullets: [
+        { t: "Git serve pra qualquer coisa baseada em arquivo de texto",
+          p: "Não é \"ferramenta de programador\" — é versionamento de arquivos. Qualquer coisa que vire texto (JSON, YAML, Markdown, CSV pequeno) cabe num repositório, com histórico, branches e colaboração." },
+        { t: "Backup de fluxos n8n e automações",
+          p: "Exporte os workflows do n8n como JSON e versione no Git. Cada mudança no fluxo vira commit, dá pra reverter quando quebrar e replicar a automação em outro ambiente. Vale o mesmo pra Make, Zapier (com export) e qualquer ferramenta low-code que exporte JSON." },
+        { t: "Cérebro da empresa: notas, processos e decisões",
+          p: "Repositório privado com notas em Markdown organizadas por pasta vira a memória externa do negócio. Decisões importantes ganham commit com data e autor, processos ficam versionados, dá pra editar de qualquer máquina e tudo continua sincronizado. Substitui parte do que vai pra Notion." },
+        { t: "Biblioteca de prompts e contextos de IA",
+          p: "Prompts de sistema, instruções de agentes, arquivos AGENTS.md/CLAUDE.md e contextos reutilizáveis cabem todos num repositório. Versionado, dá pra ver o que mudou de um dia pro outro e por quê — e a IA evolui de forma rastreável." },
+        { t: "Dotfiles e configurações de ambiente",
+          p: "Arquivos de config (.zshrc, configurações do VS Code/Cursor, snippets) num repositório próprio. Máquina nova, clona o repo e em minutos o ambiente está igual ao anterior. Hábito clássico que poupa horas a cada migração." },
+        { t: "Templates de projeto e starter kits",
+          p: "Estrutura inicial padrão (.gitignore, prettier, eslint, README com seções vazias, scripts) num repositório template. GitHub permite marcar como template e cada projeto novo nasce com o esqueleto pronto." },
+        { t: "Documentação técnica e específica de cliente",
+          p: "Documentação de API, runbooks, playbooks de incidente e materiais por cliente em Markdown versionado. Cada cliente vira uma pasta ou um repositório, e a evolução do entendimento fica registrada commit a commit." }
+      ] },
+    { n: 17, t: "Perfil como portfólio", star: false,
+      bullets: [
+        { t: "O perfil GitHub como cartão de visita técnico",
+          p: "Pra quem trabalha com código (mesmo que seja só vibe coding), o perfil do GitHub fala mais que LinkedIn. Recrutadores e clientes olham ali primeiro." },
+        { t: "README de perfil personalizado",
+          p: "Crie um repositório com o seu username (ex: usuario/usuario) e um README.md dentro. O conteúdo aparece no topo do seu perfil. É o lugar certo pra apresentar quem você é, no que trabalha e como contatar." },
+        { t: "Pinning dos repositórios mais relevantes",
+          p: "Você pode fixar até 6 repositórios no topo do perfil. Escolha os que melhor representam o que você faz. Ordem importa: o primeiro é o que mais é visto." },
+        { t: "READMEs claros nos repositórios públicos",
+          p: "Cada repositório público merece um README com: o que é, pra que serve, como rodar, screenshot ou demo. Sem isso, repositório vazio só atrapalha." },
+        { t: "Contribuições constantes (o calendário verde)",
+          p: "O calendário de contribuições é vitrine. Não é sobre contribuir todo dia obsessivamente, é sobre mostrar atividade regular. Vibe coder que commita 3x por semana já tem perfil mais convincente que dev formado parado há 6 meses." },
+        { t: "Open source como amplificador",
+          p: "Contribuições em projetos públicos (PRs aceitos, issues resolvidas, libs próprias) aparecem no perfil e dão credibilidade extra. Não precisa ser muito — qualidade > volume." },
+        { t: "Repositórios privados ainda contam",
+          p: "Trabalho em repositórios privados também conta no calendário se você habilitar a opção em Settings → Profile. Útil pra mostrar que você está produzindo, mesmo que o código não esteja público." }
+      ] },
+    { n: 18, t: "Caminho de evolução", star: false,
+      bullets: [
+        { t: "Etapa 1: solo, ciclo simples",
+          p: "Começa com o ciclo básico em main: status, add, commit, push. Sem branch, sem PR. Já é infinitamente melhor que pasta versionada manualmente." },
+        { t: "Etapa 2: introdução de branches",
+          p: "Quando experimentos começam a quebrar a main, você passa a trabalhar em branches separadas e fazer merge quando estiver pronto." },
+        { t: "Etapa 3: Pull Requests, mesmo solo",
+          p: "Em vez de fazer merge direto, abre PR. Vira um ritual de revisão. Você lê o próprio diff antes de aprovar — e percebe coisas que não tinha visto." },
+        { t: "Etapa 4: deploy automático",
+          p: "Conecta o repositório a Vercel, Netlify ou similar. Cada push vira deploy. Aqui você ganha velocidade real de iteração." },
+        { t: "Etapa 5: primeira pessoa entra no projeto",
+          p: "Adiciona freelancer ou parceiro como colaborador. PRs deixam de ser opcionais — viram obrigatórios. Code review entra na rotina." },
+        { t: "Etapa 6: Issues e Projects",
+          p: "Ideias, bugs e features deixam de ficar em rascunho mental ou Notion. Vão pro GitHub, ligadas ao código. O backlog vira parte do projeto." },
+        { t: "Etapa 7: automações com Actions",
+          p: "O que era manual repetitivo vira workflow. Testes a cada PR, deploy a cada release, notificação a cada push. O projeto começa a se cuidar sozinho." },
+        { t: "Etapa 8: Organization e múltiplos repositórios",
+          p: "Quando o projeto vira produto sério, você cria Organization, separa em repos por contexto, configura permissões granulares. Aqui é o nível profissional pleno." },
+        { t: "Adote cada etapa quando o projeto pedir",
+          p: "Não pule pra etapa 8 no primeiro projeto. Adicionar complexidade cedo demais atrapalha mais do que ajuda. Escale o processo junto com o projeto." }
+      ] },
+    { n: 19, t: "Desafio: vazei uma chave, e agora?", star: true,
+      bullets: [
+        { t: "Por que apagar e commitar de novo NÃO resolve",
+          p: "Apagar a chave num commit novo só esconde a linha atual. O commit anterior continua no histórico, acessível por hash, fork, clone antigo ou cache de bot. Bots de scraping varrem o GitHub em segundos atrás de padrões tipo sk-..., AKIA..., ghp_... A chave já é considerada comprometida no momento que sai da sua máquina." },
+        { t: "Mesmo em repositório privado, considere comprometido",
+          p: "Privado não é seguro: qualquer colaborador adicionado vê o histórico inteiro, incluindo o que você apagou \"depois\". Backups, integrações e ferramentas conectadas (CI, IA com acesso ao repo) também leram o conteúdo. Trate vazamento em repo privado com a mesma seriedade que público." },
+        { t: "PASSO 1 — Rotacione a chave imediatamente, antes de qualquer outra coisa",
+          p: "Vá no painel do provedor (OpenAI, AWS, Stripe, Supabase, o que for) e revogue/rotacione a chave AGORA. Antes de pensar em git, antes de pensar em apagar. Esse é o único passo que efetivamente neutraliza o risco — todo o resto vem depois." },
+        { t: "PASSO 2 — Revise o que a chave dava acesso",
+          p: "Veja faturamento, logs de uso, atividades suspeitas. Se houver indício de uso indevido (cobranças estranhas, requests fora do padrão), trate como incidente: notifique quem precisa, abra ticket no provedor, registre tudo." },
+        { t: "PASSO 3 — Limpe o histórico do Git",
+          p: "Use git filter-repo (oficialmente recomendado) ou BFG Repo-Cleaner. Os dois reescrevem o histórico removendo a chave de TODOS os commits, não só do último. BFG é mais simples pra casos diretos.",
+          c: "# BFG (mais simples)\njava -jar bfg.jar --replace-text passwords.txt repo.git\n\n# git filter-repo (mais flexível)\ngit filter-repo --replace-text passwords.txt" },
+        { t: "PASSO 4 — Force push e expire as referências antigas",
+          p: "Depois de reescrever, força o histórico novo no remoto e expira o reflog local pra garbage collection apagar de verdade.",
+          c: "git reflog expire --expire=now --all\ngit gc --prune=now --aggressive\ngit push --force --all\ngit push --force --tags" },
+        { t: "PASSO 5 — Avise colaboradores e forks",
+          p: "Quem tinha clone local precisa apagar e clonar de novo (force push reescreve hashes). Em repositório público, forks externos NÃO são reescritos — a chave continua viva nas cópias forkadas. Se isso te assusta, abra ticket no GitHub Support pra purgar caches do servidor." },
+        { t: "Por que limpar o histórico não desfaz o vazamento",
+          p: "Mesmo após force push, considere: bots automáticos podem ter coletado a chave nos primeiros segundos; forks externos não são afetados; o GitHub mantém referências por um tempo no garbage collection. Por isso o passo 1 (rotacionar) é obrigatório. Limpar o histórico é higiene, não remédio." },
+        { t: "Prevenção: o que blindar pra não acontecer de novo",
+          p: ".gitignore com .env desde o primeiro commit. Secret Scanning ativado nas configurações do GitHub (gratuito em repos públicos, alerta automático). Pre-commit hooks com gitleaks ou git-secrets pra bloquear commit antes que ele saia da máquina. Variáveis sensíveis sempre em .env local + painel do provedor de deploy.",
+          c: "# Secret Scanning: Settings → Code security → habilitar\n# Pre-commit com gitleaks:\nbrew install gitleaks\ngitleaks protect --staged" },
+        { t: "Hábito que evita 99% dos vazamentos",
+          p: "Crie o .gitignore ANTES do primeiro git add. Se o projeto tem .env, ele entra no .gitignore antes de qualquer outra coisa. Esse único hábito resolve a maior parte dos casos sem precisar de ferramenta nenhuma." }
+      ] }
+  ];
+
+  const appendix = {
+    t: "Apêndice — Principais comandos",
+    categories: [
+      { name: "Setup", cmds: [
+        { c: "git --version", d: "Verifica se o Git está instalado e qual versão" },
+        { c: "git config --global user.name \"nome\"", d: "Define seu nome para os commits" },
+        { c: "git config --global user.email \"email\"", d: "Define seu email para os commits" },
+        { c: "git config --global init.defaultBranch main", d: "Define main como branch padrão" },
+        { c: "ssh-keygen -t ed25519 -C \"email\"", d: "Gera chave SSH para autenticação" }
+      ] },
+      { name: "Repositório", cmds: [
+        { c: "git init", d: "Inicia um repositório no diretório atual" },
+        { c: "git clone <url>", d: "Clona um repositório remoto" },
+        { c: "git remote add origin <url>", d: "Conecta repositório local ao remoto" },
+        { c: "git remote -v", d: "Lista os repositórios remotos configurados" }
+      ] },
+      { name: "Ciclo diário", cmds: [
+        { c: "git status", d: "Mostra o estado dos arquivos" },
+        { c: "git add <arquivo>", d: "Adiciona arquivo ao staging" },
+        { c: "git add .", d: "Adiciona todas as mudanças ao staging" },
+        { c: "git commit -m \"msg\"", d: "Cria um commit com mensagem" },
+        { c: "git commit -am \"msg\"", d: "Adiciona e commita arquivos já versionados" },
+        { c: "git push", d: "Envia commits ao remoto" },
+        { c: "git pull", d: "Baixa e mescla mudanças do remoto" },
+        { c: "git fetch", d: "Baixa mudanças sem mesclar" }
+      ] },
+      { name: "Histórico", cmds: [
+        { c: "git log", d: "Mostra histórico de commits" },
+        { c: "git log --oneline", d: "Histórico compacto, um commit por linha" },
+        { c: "git log --oneline --graph", d: "Histórico visual com branches" },
+        { c: "git diff", d: "Mostra mudanças não commitadas (working tree vs staging)" },
+        { c: "git diff --staged", d: "Mostra mudanças no staging (índice vs último commit)" },
+        { c: "git diff HEAD", d: "Tudo que difere do último commit (staged + unstaged)" },
+        { c: "git show <hash>", d: "Mostra detalhes de um commit específico" }
+      ] },
+      { name: "Branches", cmds: [
+        { c: "git branch", d: "Lista branches locais" },
+        { c: "git branch -a", d: "Lista branches locais e remotas" },
+        { c: "git checkout -b <nome>", d: "Cria e muda para nova branch" },
+        { c: "git checkout <branch>", d: "Muda para branch existente" },
+        { c: "git switch <branch>", d: "Alternativa moderna ao checkout" },
+        { c: "git merge <branch>", d: "Mescla branch na atual" },
+        { c: "git branch -d <nome>", d: "Deleta branch local" }
+      ] },
+      { name: "Desfazer", cmds: [
+        { c: "git restore <arquivo>", d: "Descarta mudanças não commitadas" },
+        { c: "git restore --staged <arquivo>", d: "Remove arquivo do staging" },
+        { c: "git revert <hash>", d: "Cria commit que desfaz outro (seguro)" },
+        { c: "git reset --soft <hash>", d: "Volta o ponteiro mantendo mudanças" },
+        { c: "git reset --hard <hash>", d: "Volta o ponteiro descartando mudanças" },
+        { c: "git stash", d: "Guarda mudanças temporariamente" },
+        { c: "git stash pop", d: "Restaura mudanças guardadas" }
+      ] },
+      { name: "Submodules", cmds: [
+        { c: "git submodule add <url> <pasta>", d: "Adiciona submódulo ao projeto" },
+        { c: "git submodule update --init --recursive", d: "Inicializa submódulos após clone" },
+        { c: "git submodule update --remote", d: "Atualiza submódulos para última versão" }
+      ] }
+    ]
+  };
+
+  const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[c]);
+
+  function parseOpenIndices(searchParams) {
+    const raw = searchParams.get('open') || searchParams.get('o') || '';
+    return raw.split(',').map((s) => parseInt(s.trim(), 10)).filter((i) => !isNaN(i) && i >= 0);
+  }
+
+  function parseUrlState() {
+    const q = new URLSearchParams(window.location.search);
+    const b = (q.get('block') || q.get('b') || '').trim().toLowerCase();
+    const open = parseOpenIndices(q);
+    if (b === 'appendix' || b === 'a') {
+      return { mode: 'appendix', open: [] };
+    }
+    const num = parseInt(b, 10);
+    if (!isNaN(num) && num > 0) {
+      const idx = nodes.findIndex((nd) => nd.n === num);
+      return { mode: 'node', idx: idx >= 0 ? idx : 0, open };
+    }
+    return { mode: 'node', idx: 0, open };
+  }
+
+  function syncUrlAppendix() {
+    const u = new URL(window.location.href);
+    u.searchParams.set('block', 'appendix');
+    u.searchParams.delete('open');
+    u.searchParams.delete('o');
+    history.replaceState(null, '', u.pathname + u.search + u.hash);
+  }
+
+  function syncUrlNode(idx, openIndices) {
+    const u = new URL(window.location.href);
+    u.searchParams.set('block', String(nodes[idx].n));
+    const uniq = [...new Set(openIndices)].sort((a, b) => a - b);
+    if (uniq.length) u.searchParams.set('open', uniq.join(','));
+    else {
+      u.searchParams.delete('open');
+      u.searchParams.delete('o');
+    }
+    history.replaceState(null, '', u.pathname + u.search + u.hash);
+  }
+
+  function collectOpenSubIndices() {
+    const list = document.getElementById('sub-list');
+    if (!list) return [];
+    return Array.from(list.querySelectorAll('.mm-sub.open'))
+      .map((li) => parseInt(li.dataset.subIdx, 10))
+      .filter((i) => !isNaN(i));
+  }
+
+  function applyOpenIndices(subListRoot, indices) {
+    const set = new Set(indices);
+    subListRoot.querySelectorAll('.mm-sub').forEach((li) => {
+      const i = parseInt(li.dataset.subIdx, 10);
+      li.classList.toggle('open', !isNaN(i) && set.has(i));
+    });
+  }
+
+  const mmLightbox = document.getElementById('mm-lightbox');
+  const mmLightboxInner = document.getElementById('mm-lightbox-inner');
+  const mmLightboxClose = document.getElementById('mm-lightbox-close');
+  const mmLightboxBackdrop = document.getElementById('mm-lightbox-backdrop');
+  let mmLightboxLastFocus = null;
+  let mmLightboxAbort = null;
+
+  function openDiagramLightbox(svgEl) {
+    if (!svgEl || !mmLightbox) return;
+    closeDiagramLightbox();
+    mmLightboxAbort = new AbortController();
+    const sig = mmLightboxAbort.signal;
+
+    mmLightboxLastFocus = document.activeElement;
+    const clone = svgEl.cloneNode(true);
+    clone.querySelectorAll('[id]').forEach((el) => {
+      el.id = 'lb-' + String(el.id).replace(/^lb-/, '') + '-' + Math.random().toString(36).slice(2, 8);
+    });
+    clone.removeAttribute('width');
+
+    const vb = clone.viewBox && clone.viewBox.baseVal;
+    const baseW = vb && vb.width > 0 ? vb.width : 580;
+    const intrinsicPx = Math.round(Math.max(baseW * 1.15, 800));
+
+    const toolbar = document.createElement('div');
+    toolbar.className = 'mm-lightbox-toolbar';
+    toolbar.innerHTML = `
+      <button type="button" data-lb-zoom="out" aria-label="Diminuir zoom">−</button>
+      <button type="button" data-lb-zoom="in" aria-label="Aumentar zoom">+</button>
+      <button type="button" data-lb-zoom="reset" aria-label="Zoom inicial">Ajustar</button>
+      <span class="mm-lightbox-zoom-label" id="mm-lb-zoom-pct">150%</span>
+      <span class="mm-lightbox-hint">Rolagem do mouse: zoom · arraste para mover a imagem</span>
+    `;
+
+    const scroll = document.createElement('div');
+    scroll.className = 'mm-lightbox-scroll';
+    scroll.setAttribute('tabindex', '0');
+    scroll.appendChild(clone);
+
+    mmLightboxInner.innerHTML = '';
+    mmLightboxInner.appendChild(toolbar);
+    mmLightboxInner.appendChild(scroll);
+
+    let zoomMul = 1.5;
+    const MIN_Z = 0.45;
+    const MAX_Z = 3.5;
+    const pctEl = toolbar.querySelector('#mm-lb-zoom-pct');
+
+    function applyZoom() {
+      zoomMul = Math.min(MAX_Z, Math.max(MIN_Z, zoomMul));
+      clone.style.width = Math.round(intrinsicPx * zoomMul) + 'px';
+      if (pctEl) pctEl.textContent = Math.round(zoomMul * 100) + '%';
+    }
+
+    function zoomBy(factor) {
+      zoomMul *= factor;
+      applyZoom();
+    }
+
+    applyZoom();
+
+    toolbar.querySelector('[data-lb-zoom="in"]').addEventListener('click', () => zoomBy(1.12), { signal: sig });
+    toolbar.querySelector('[data-lb-zoom="out"]').addEventListener('click', () => zoomBy(1 / 1.12), { signal: sig });
+    toolbar.querySelector('[data-lb-zoom="reset"]').addEventListener('click', () => {
+      zoomMul = 1.5;
+      applyZoom();
+    }, { signal: sig });
+
+    scroll.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.07 : 1 / 1.07;
+      zoomBy(factor);
+    }, { passive: false, signal: sig });
+
+    let drag = null;
+    scroll.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      drag = { x: e.clientX, y: e.clientY, sl: scroll.scrollLeft, st: scroll.scrollTop };
+      scroll.classList.add('is-dragging');
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x;
+      const dy = e.clientY - drag.y;
+      e.preventDefault();
+      scroll.scrollLeft = drag.sl - dx;
+      scroll.scrollTop = drag.st - dy;
+    }, { passive: false, signal: sig });
+    document.addEventListener('mouseup', (e) => {
+      drag = null;
+      scroll.classList.remove('is-dragging');
+    }, { signal: sig });
+
+    document.addEventListener('keydown', (e) => {
+      if (!mmLightbox.classList.contains('is-open')) return;
+      if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        zoomBy(1.12);
+      }
+      if (e.key === '-' || e.key === '_') {
+        e.preventDefault();
+        zoomBy(1 / 1.12);
+      }
+    }, { signal: sig });
+
+    mmLightbox.hidden = false;
+    requestAnimationFrame(() => {
+      mmLightbox.classList.add('is-open');
+      requestAnimationFrame(() => {
+        const cx = Math.max(0, (scroll.scrollWidth - scroll.clientWidth) / 2);
+        const cy = Math.max(0, (scroll.scrollHeight - scroll.clientHeight) / 2);
+        scroll.scrollLeft = cx;
+        scroll.scrollTop = cy;
+        scroll.focus({ preventScroll: true });
+      });
+    });
+    mmLightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    mmLightboxClose.focus();
+  }
+
+  function closeDiagramLightbox() {
+    if (mmLightboxAbort) {
+      mmLightboxAbort.abort();
+      mmLightboxAbort = null;
+    }
+    if (!mmLightbox) return;
+    mmLightbox.classList.remove('is-open');
+    mmLightbox.setAttribute('aria-hidden', 'true');
+    mmLightbox.hidden = true;
+    mmLightboxInner.innerHTML = '';
+    document.body.style.overflow = '';
+    if (mmLightboxLastFocus && typeof mmLightboxLastFocus.focus === 'function') mmLightboxLastFocus.focus();
+    mmLightboxLastFocus = null;
+  }
+
+  function bindFlowDiagramItem(li, panelIdx, subIdx) {
+    li.dataset.subIdx = String(subIdx);
+    const title = li.querySelector('.mm-sub-title');
+    const zoom = li.querySelector('.mm-img-zoom');
+    title.addEventListener('click', (e) => {
+      e.stopPropagation();
+      li.classList.toggle('open');
+      syncUrlNode(panelIdx, collectOpenSubIndices());
+    });
+    zoom.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openDiagramLightbox(zoom.querySelector('svg'));
+    });
+    zoom.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.stopPropagation();
+        openDiagramLightbox(zoom.querySelector('svg'));
+      }
+    });
+  }
+
+  if (mmLightboxClose) mmLightboxClose.addEventListener('click', closeDiagramLightbox);
+  if (mmLightboxBackdrop) mmLightboxBackdrop.addEventListener('click', closeDiagramLightbox);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mmLightbox && mmLightbox.classList.contains('is-open')) closeDiagramLightbox();
+  });
+
+  const container = document.getElementById('mm-nodes');
+  nodes.forEach((nd, i) => {
+    const el = document.createElement('div');
+    el.className = 'mm-node';
+    el.dataset.idx = i;
+    el.innerHTML = `<span class="mm-num">${escapeHtml(nd.n)}</span><span class="mm-title">${escapeHtml(nd.t)}${nd.star ? ' <span class="mm-star">★</span>' : ''}</span>`;
+    el.addEventListener('click', () => render(i, []));
+    container.appendChild(el);
+  });
+
+  const appendixEl = document.getElementById('mm-appendix');
+  const appNode = document.createElement('div');
+  appNode.className = 'mm-node';
+  appNode.dataset.idx = 'appendix';
+  appNode.innerHTML = `<span class="mm-num">A</span><span class="mm-title">Apêndice — Principais comandos</span>`;
+  appNode.addEventListener('click', () => renderAppendix());
+  appendixEl.appendChild(appNode);
+
+  function render(idx, openIndices = []) {
+    document.querySelectorAll('.mm-node').forEach(n => n.classList.toggle('active', n.dataset.idx == idx));
+    const nd = nodes[idx];
+    const panel = document.getElementById('mm-panel');
+    panel.innerHTML = `
+      <div class="mm-eyebrow">Bloco ${escapeHtml(nd.n)}</div>
+      <h2 class="mm-h">${escapeHtml(nd.t)}</h2>
+      <ul class="mm-sub-list" id="sub-list"></ul>
+    `;
+    const subList = document.getElementById('sub-list');
+    nd.bullets.forEach((b, bi) => {
+      const sub = document.createElement('li');
+      sub.className = 'mm-sub';
+      sub.dataset.subIdx = String(bi);
+      const cmdHtml = b.c ? `<code class="mm-card-cmd">${escapeHtml(b.c)}</code>` : '';
+      sub.innerHTML = `
+        <div class="mm-sub-title">${escapeHtml(b.t)}</div>
+        <div class="mm-sub-card">
+          <p class="mm-card-prose">${escapeHtml(b.p)}</p>
+          ${cmdHtml}
+        </div>
+      `;
+      sub.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sub.classList.toggle('open');
+        syncUrlNode(idx, collectOpenSubIndices());
+      });
+      subList.appendChild(sub);
+    });
+
+    if (nd.hasFlow) {
+      const flowIdx = nd.bullets.length;
+      const flowGh = document.createElement('li');
+      flowGh.className = 'mm-sub';
+      flowGh.innerHTML = `
+        <div class="mm-sub-title">GitHub Flow</div>
+        <div class="mm-sub-card">
+          <div class="mm-img-wrap mm-img-zoom" role="button" tabindex="0" aria-label="Ampliar diagrama GitHub Flow">
+            <svg width="100%" viewBox="0 0 580 200" role="img" aria-labelledby="gh-flow-title gh-flow-desc">
+              <title id="gh-flow-title">GitHub Flow</title>
+              <desc id="gh-flow-desc">Branch main com feature branch saindo e voltando via Pull Request</desc>
+              <line x1="40" y1="60" x2="540" y2="60" class="mm-flow-line-main" stroke-width="2"/>
+              <circle cx="60" cy="60" r="6" class="mm-flow-dot-main"/>
+              <circle cx="180" cy="60" r="6" class="mm-flow-dot-main"/>
+              <circle cx="420" cy="60" r="6" class="mm-flow-dot-main"/>
+              <circle cx="520" cy="60" r="6" class="mm-flow-dot-main"/>
+              <text x="40" y="40" class="ts mm-flow-text-main">main</text>
+              <path d="M 180 60 Q 220 60, 240 100 L 360 100 Q 380 100, 420 60" fill="none" class="mm-flow-line-feat" stroke-width="2"/>
+              <circle cx="270" cy="100" r="6" class="mm-flow-dot-feat"/>
+              <circle cx="330" cy="100" r="6" class="mm-flow-dot-feat"/>
+              <text x="240" y="130" class="ts mm-flow-text-feat">feature/nova-tela</text>
+              <text x="395" y="50" class="ts mm-flow-text-main" text-anchor="end">Pull Request → merge</text>
+            </svg>
+          </div>
+          <p class="mm-img-hint">Clique na imagem para ampliar</p>
+        </div>
+      `;
+      bindFlowDiagramItem(flowGh, idx, flowIdx);
+      subList.appendChild(flowGh);
+
+      const flowGf = document.createElement('li');
+      flowGf.className = 'mm-sub';
+      flowGf.innerHTML = `
+        <div class="mm-sub-title">Gitflow</div>
+        <div class="mm-sub-card">
+          <div class="mm-img-wrap mm-img-zoom" role="button" tabindex="0" aria-label="Ampliar diagrama Gitflow">
+            <svg width="100%" viewBox="0 0 820 268" role="img" aria-labelledby="gf-svg-title gf-svg-desc">
+              <title id="gf-svg-title">Gitflow</title>
+              <desc id="gf-svg-desc">Modelo de branches com master em produção, develop integrando features, branches de release e hotfix.</desc>
+              <line class="mm-gf-grid" x1="24" y1="42" x2="796" y2="42"/>
+              <line class="mm-gf-grid" x1="24" y1="82" x2="796" y2="82"/>
+              <line class="mm-gf-grid" x1="24" y1="122" x2="796" y2="122"/>
+              <line class="mm-gf-grid" x1="24" y1="162" x2="796" y2="162"/>
+              <line class="mm-gf-grid" x1="24" y1="202" x2="796" y2="202"/>
+              <line class="mm-gf-grid" x1="24" y1="242" x2="796" y2="242"/>
+              <rect x="18" y="8" width="12" height="12" rx="2" fill="var(--info)"/>
+              <text x="34" y="18" class="mm-gf-legend-text">Master</text>
+              <rect x="92" y="8" width="12" height="12" rx="2" fill="var(--warning)"/>
+              <text x="108" y="18" class="mm-gf-legend-text">Hotfix</text>
+              <rect x="172" y="8" width="12" height="12" rx="2" class="mm-gf-legend-release"/>
+              <text x="188" y="18" class="mm-gf-legend-text">Release</text>
+              <rect x="258" y="8" width="12" height="12" rx="2" class="mm-gf-legend-develop"/>
+              <text x="274" y="18" class="mm-gf-legend-text">Develop</text>
+              <rect x="348" y="8" width="12" height="12" rx="2" class="mm-gf-legend-feature"/>
+              <text x="364" y="18" class="mm-gf-legend-text">Feature</text>
+              <path class="mm-gf-line-master" d="M 52 42 L 188 42 L 552 42"/>
+              <circle class="mm-gf-dot-master" cx="52" cy="42" r="5.5"/>
+              <circle class="mm-gf-dot-master" cx="188" cy="42" r="5.5"/>
+              <circle class="mm-gf-dot-master" cx="552" cy="42" r="5.5"/>
+              <path class="mm-gf-merge" d="M 52 42 L 52 82"/>
+              <path class="mm-gf-line-hotfix" d="M 52 82 L 110 82 L 188 82"/>
+              <circle class="mm-gf-dot-hotfix" cx="110" cy="82" r="5"/>
+              <path class="mm-gf-merge" d="M 188 82 L 188 42 M 188 82 L 188 162"/>
+              <path class="mm-gf-merge" d="M 52 42 C 52 95 52 130 52 162"/>
+              <path class="mm-gf-line-develop" d="M 52 162 L 132 162 L 188 162 L 268 162 L 358 162 L 528 162"/>
+              <circle class="mm-gf-dot-develop" cx="52" cy="162" r="5"/>
+              <circle class="mm-gf-dot-develop" cx="132" cy="162" r="5"/>
+              <circle class="mm-gf-dot-develop" cx="188" cy="162" r="5"/>
+              <circle class="mm-gf-dot-develop" cx="268" cy="162" r="5"/>
+              <circle class="mm-gf-dot-develop" cx="358" cy="162" r="5"/>
+              <circle class="mm-gf-dot-develop" cx="528" cy="162" r="5"/>
+              <path class="mm-gf-merge" d="M 132 162 L 132 202"/>
+              <path class="mm-gf-line-feature" d="M 132 202 L 172 202 L 212 202"/>
+              <circle class="mm-gf-dot-feature" cx="152" cy="202" r="4.5"/>
+              <circle class="mm-gf-dot-feature" cx="192" cy="202" r="4.5"/>
+              <path class="mm-gf-merge" d="M 212 202 L 212 162"/>
+              <path class="mm-gf-merge" d="M 328 162 L 328 242"/>
+              <path class="mm-gf-line-feature" d="M 328 242 L 372 242 L 416 242 L 460 242"/>
+              <circle class="mm-gf-dot-feature" cx="348" cy="242" r="4.5"/>
+              <circle class="mm-gf-dot-feature" cx="392" cy="242" r="4.5"/>
+              <circle class="mm-gf-dot-feature" cx="436" cy="242" r="4.5"/>
+              <path class="mm-gf-merge" d="M 358 162 L 358 122"/>
+              <path class="mm-gf-line-release" d="M 358 122 L 418 122 L 488 122"/>
+              <circle class="mm-gf-dot-release" cx="398" cy="122" r="5"/>
+              <circle class="mm-gf-dot-release" cx="448" cy="122" r="5"/>
+              <path class="mm-gf-merge" d="M 488 122 L 552 42"/>
+              <path class="mm-gf-merge" d="M 488 122 L 528 162"/>
+              <rect x="38" y="28" width="36" height="14" rx="2" fill="var(--bg-primary)" stroke="var(--info)" stroke-width="0.75"/>
+              <text x="44" y="38" class="mm-gf-tag">v0.1</text>
+              <rect x="166" y="28" width="36" height="14" rx="2" fill="var(--bg-primary)" stroke="var(--info)" stroke-width="0.75"/>
+              <text x="172" y="38" class="mm-gf-tag">v0.2</text>
+              <rect x="522" y="28" width="36" height="14" rx="2" fill="var(--bg-primary)" stroke="var(--info)" stroke-width="0.75"/>
+              <text x="528" y="38" class="mm-gf-tag">v1.0</text>
+              <text x="48" y="58" class="mm-gf-legend-text">master</text>
+              <text x="48" y="178" class="mm-gf-legend-text">develop</text>
+              <text x="118" y="218" class="mm-gf-legend-text">feature 1</text>
+              <text x="328" y="258" class="mm-gf-legend-text">feature 2</text>
+              <text x="358" y="138" class="mm-gf-legend-text">release</text>
+              <text x="72" y="98" class="mm-gf-legend-text">hotfix</text>
+            </svg>
+          </div>
+          <p class="mm-img-hint">Clique na imagem para ampliar</p>
+        </div>
+      `;
+      bindFlowDiagramItem(flowGf, idx, flowIdx + 1);
+      subList.appendChild(flowGf);
+    }
+
+    applyOpenIndices(subList, openIndices);
+    syncUrlNode(idx, collectOpenSubIndices());
+  }
+
+  function renderAppendix() {
+    document.querySelectorAll('.mm-node').forEach(n => n.classList.toggle('active', n.dataset.idx === 'appendix'));
+    const panel = document.getElementById('mm-panel');
+    let html = `
+      <div class="mm-eyebrow">Apêndice</div>
+      <h2 class="mm-h">${escapeHtml(appendix.t)}</h2>
+    `;
+    appendix.categories.forEach(cat => {
+      html += `<div class="mm-cat"><div class="mm-cat-h">${escapeHtml(cat.name)}</div><table class="mm-cmd-table">`;
+      cat.cmds.forEach(c => {
+        html += `<tr><td><span class="mm-cmd-code">${escapeHtml(c.c)}</span></td><td class="mm-cmd-desc">${escapeHtml(c.d)}</td></tr>`;
+      });
+      html += `</table></div>`;
+    });
+    panel.innerHTML = html;
+    syncUrlAppendix();
+  }
+
+  function applyRouteFromLocation() {
+    const st = parseUrlState();
+    if (st.mode === 'appendix') {
+      renderAppendix();
+    } else {
+      render(st.idx, st.open);
+    }
+  }
+
+  applyRouteFromLocation();
+})();
+</script>
+</body>
+</html>
