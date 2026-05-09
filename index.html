@@ -362,6 +362,16 @@
     border-radius: var(--radius-md);
   }
 
+  a.mm-cmd-link {
+    color: var(--info);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+
+  a.mm-cmd-link:hover {
+    border-bottom-color: var(--info);
+  }
+
   .mm-cmd-desc {
     color: var(--text-secondary);
   }
@@ -1116,6 +1126,26 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[c]);
 
+  /** Primeira coluna do apêndice "Links úteis": transforma host/caminho em &lt;a href&gt;. Templates com &lt; &gt; ficam texto. */
+  function appendixLinkCellHtml(raw) {
+    const s = String(raw).trim();
+    if (!s || /[<>]/.test(s)) {
+      return `<span class="mm-cmd-code">${escapeHtml(raw)}</span>`;
+    }
+    let href = s;
+    if (!/^https?:\/\//i.test(href)) href = 'https://' + href;
+    let parsed;
+    try {
+      parsed = new URL(href);
+    } catch {
+      return `<span class="mm-cmd-code">${escapeHtml(s)}</span>`;
+    }
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return `<span class="mm-cmd-code">${escapeHtml(s)}</span>`;
+    }
+    return `<a href="${escapeHtml(parsed.href)}" class="mm-cmd-code mm-cmd-link" target="_blank" rel="noopener noreferrer">${escapeHtml(s)}</a>`;
+  }
+
   function parseOpenIndices(searchParams) {
     const raw = searchParams.get('open') || searchParams.get('o') || '';
     return raw.split(',').map((s) => parseInt(s.trim(), 10)).filter((i) => !isNaN(i) && i >= 0);
@@ -1517,10 +1547,14 @@
       <div class="mm-eyebrow">Apêndice ${ai + 1}</div>
       <h2 class="mm-h">${escapeHtml(app.t)}</h2>
     `;
+    const linkifyFirstCol = /Links úteis/i.test(app.t);
     app.categories.forEach(cat => {
       html += `<div class="mm-cat"><div class="mm-cat-h">${escapeHtml(cat.name)}</div><table class="mm-cmd-table">`;
       cat.cmds.forEach(c => {
-        html += `<tr><td><span class="mm-cmd-code">${escapeHtml(c.c)}</span></td><td class="mm-cmd-desc">${escapeHtml(c.d)}</td></tr>`;
+        const firstCell = linkifyFirstCol
+          ? appendixLinkCellHtml(c.c)
+          : `<span class="mm-cmd-code">${escapeHtml(c.c)}</span>`;
+        html += `<tr><td>${firstCell}</td><td class="mm-cmd-desc">${escapeHtml(c.d)}</td></tr>`;
       });
       html += `</table></div>`;
     });
