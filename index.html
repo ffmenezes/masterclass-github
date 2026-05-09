@@ -88,6 +88,22 @@
     margin: 0;
   }
 
+  .page-repo {
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .page-repo a {
+    color: var(--info);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+
+  .page-repo a:hover {
+    border-bottom-color: var(--info);
+  }
+
   .mm-wrap {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
@@ -549,6 +565,9 @@
     <div class="page-eyebrow">Playbook</div>
     <h1 class="page-title">Masterclass Git &amp; GitHub para Vibecoders</h1>
     <p class="page-subtitle">Mapa mental interativo · clique nos blocos e nos subtópicos para expandir</p>
+    <p class="page-repo">
+      <a href="https://github.com/ffmenezes/masterclass-github" target="_blank" rel="noopener noreferrer">github.com/ffmenezes/masterclass-github</a>
+    </p>
   </div>
   <div class="mm-wrap">
     <div class="mm-tree">
@@ -687,7 +706,46 @@
           p: "DeepWiki: hábito de abrir antes de ler README de qualquer repo desconhecido. GitNexus: instalar globalmente, rodar gitnexus analyze no projeto e configurar MCP no Cursor/Claude Code uma vez. A partir daí, a IA passa a ter visão de impacto antes de editar.",
           c: "npm install -g gitnexus\nnpx gitnexus analyze\nnpx gitnexus setup" }
       ] },
-    { n: 8, t: ".gitignore e segurança", star: false,
+    { n: 8, t: "Stars e forks", star: false,
+      bullets: [
+        { t: "Star é favoritar — guarda o repositório pra você",
+          p: "Clicar na estrela no canto superior direito salva o repositório na sua lista pessoal (github.com/seu-usuario?tab=stars). É o jeito direto de não perder uma lib ou template que você quer usar depois. Sem star, é caçar no histórico do navegador." },
+        { t: "Watch é diferente — notificação ativa de cada mudança",
+          p: "Watch (sininho) faz você receber notificação de cada issue, PR e release. Use só em projetos onde você é mantenedor ou contribui ativamente — em libs populares vira spam. Star é leitura passiva, watch é vigilância ativa." },
+        { t: "Star também é incentivo pro autor",
+          p: "Toda vez que você usa uma lib ou projeto open source de graça, dar star é o mínimo retorno que você pode dar. Leva 1 segundo, é grátis e ajuda o projeto a aparecer em rankings, atrair contribuidores e dar moral pra quem mantém." },
+        { t: "Fork é cópia sua do repositório, dentro do GitHub",
+          p: "Fork cria um repositório novo na sua conta com todo o histórico do original. Diferente de clone: clone vai pra sua máquina, fork vive no GitHub e fica linkado ao original. É a base de como contribuição em open source funciona." },
+        { t: "Três usos práticos do fork",
+          p: "(1) Contribuir: forka, mexe na sua cópia, abre PR de volta pro original. (2) Adaptar: forka pra criar sua própria versão divergente — caso clássico é o Cursor, que forkou o VS Code e adicionou IA. (3) Backup pessoal: forka pra garantir cópia caso o original suma." },
+        { t: "Diferença entre fork e clone",
+          p: "Clone: baixa o código pra sua máquina, sem cópia no GitHub. Fork: cria cópia no GitHub na sua conta, normalmente seguida de clone pra trabalhar localmente. Pra contribuir em projeto de outra pessoa, forka primeiro, depois clona o seu fork." },
+        { t: "Onde os forks aparecem",
+          p: "Cada repositório tem aba \"Forks\" mostrando quem forkou. Útil pra ver se alguém continuou um projeto abandonado, ou pra descobrir variantes interessantes — forks de uma lib popular costumam ter PRs não aceitos pelo mantenedor original." }
+      ] },
+    { n: 9, t: "Descobrindo repositórios", star: false,
+      bullets: [
+        { t: "github.com/trending — o que está bombando agora",
+          p: "Página oficial mostra repositórios em alta hoje, na semana ou no mês, com filtro por linguagem. Útil pra acompanhar o que a comunidade está construindo, especialmente no espaço de IA, onde projeto novo vira referência em semanas." },
+        { t: "Convenção awesome- — listas curadas por tema",
+          p: "Existe uma convenção forte: repositórios começando com awesome- são listas curadas de recursos sobre um tema (awesome-python, awesome-self-hosted, awesome-llm). Buscar \"awesome <tema>\" no GitHub é atalho pra um curated knowledge dump comunitário, normalmente bem mantido.",
+          c: "awesome-python\nawesome-self-hosted\nawesome-llm\nawesome-claude-code" },
+        { t: "GitHub Topics (Tags) — o poder das etiquetas",
+          p: "Cada repositório pode ter 'topics'. Se você está num projeto e vê a tag 'notion', clicar nela te leva para outros projetos relacionados. É o jeito mais rápido de encontrar alternativas open source: busque por 'topic:notion' ou 'notion-alternative' para ver o que a comunidade está construindo.",
+          c: "https://github.com/topics/notion\nhttps://github.com/topics/notion-alternative" },
+        { t: "Outros padrões de naming que sinalizam tipo de conteúdo",
+          p: "Antes de adotar um repo desconhecido, o nome dele dá pista: *-boilerplate (esqueleto pra clonar), *-starter / *-starter-kit (sinônimo, comum em JS/TS), *-template (marcado como template no GitHub, gera novos com 1 clique), *-cheatsheet (colinha visual), *-cookbook (receitas práticas), build-your-own-* (tutoriais de construção), free-* (recursos gratuitos)." },
+        { t: "Stars como sinal de saúde — com ressalva",
+          p: "Repositório com muitas stars indica adoção ampla, mas stars isoladas enganam: existe repo com 50k stars sem commit há 3 anos. Sempre cruze com data do último commit, número de issues abertas e ritmo de PRs. Star alta + atividade recente é o filtro real." },
+        { t: "star-history.com — curva temporal de stars",
+          p: "Cole a URL do repositório em star-history.com e veja se a curva está crescendo, estagnada ou em queda. Curva subindo = projeto vivo, ganhando tração. Curva flat = pode estar abandonado mesmo com número alto. Útil antes de adotar uma lib pra projeto sério.",
+          c: "https://www.star-history.com/#owner/repo" },
+        { t: "ossinsight.io — análise profunda além das stars",
+          p: "Plataforma com analytics de OSS: trending transparente, comparação entre repos, métricas de saúde (contribuidores, velocidade de PRs, padrão de commits). Vai além do contador raso de stars do GitHub." },
+        { t: "Quando vale dar uma olhada em rankings",
+          p: "gitstar-ranking.com lista os top repos do GitHub. github.com/trending mostra o agora. Os dois ajudam a calibrar referências e descobrir o que está saindo. Não viram critério de adoção, mas servem como mapa do que existe." }
+      ] },
+    { n: 10, t: ".gitignore e segurança", star: false,
       bullets: [
         { t: "Por que API keys vazam com frequência em repositórios públicos",
           p: "Vale auditar seus repositórios públicos antes de continuar. Esse comando ajuda a procurar termos suspeitos no histórico.",
@@ -706,7 +764,7 @@
         { t: "O que fazer quando uma chave já foi vazada",
           p: "Rotacione a chave imediatamente. Limpar o histórico do Git é mais lento e nem sempre resolve — a chave já saiu de casa." }
       ] },
-    { n: 9, t: "Branches", star: false,
+    { n: 11, t: "Branches", star: false,
       bullets: [
         { t: "Sinais de que o projeto precisa de branches",
           p: "Comece a usar branches quando alguém entrar no projeto, quando subir pra produção, ou quando algo deixar de ser experimento." },
@@ -730,7 +788,7 @@
           c: "git revert <hash>\ngit reset --hard <hash>" }
       ],
       hasFlow: true },
-    { n: 10, t: "Colaboração e permissões", star: false,
+    { n: 12, t: "Colaboração e permissões", star: false,
       bullets: [
         { t: "Como adicionar colaboradores em um repositório",
           p: "Quando trouxer um freelancer ou um dev pro projeto, adicione pelo settings → collaborators do repositório." },
@@ -755,7 +813,7 @@
         { t: "Open source: fork, contribuição e reaproveitamento de projetos",
           p: "Pra propor mudanças em projetos de terceiros, faz fork primeiro, trabalha na sua cópia, e abre PR de volta no repositório original." }
       ] },
-    { n: 11, t: "Issues e Projects", star: false,
+    { n: 13, t: "Issues e Projects", star: false,
       bullets: [
         { t: "O que são Issues e por que usar",
           p: "Issues são o canal nativo do GitHub pra registrar tarefas, bugs e ideias. Ficam atreladas ao código e ao histórico do projeto, sem precisar de Notion ou Trello em paralelo." },
@@ -775,7 +833,7 @@
         { t: "Issues e Projects para o vibecoder solo",
           p: "Mesmo trabalhando sozinho, vale usar pra organizar ideias, bugs encontrados e features planejadas. Funciona como to-do list integrado ao código." }
       ] },
-    { n: 12, t: "Fluxo diário", star: false,
+    { n: 14, t: "Fluxo diário", star: false,
       bullets: [
         { t: "Começar o dia com pull",
           p: "Em projetos colaborativos, sempre puxe as últimas mudanças antes de começar a trabalhar. Evita conflitos desnecessários e garante que você não está partindo de uma base desatualizada.",
@@ -793,7 +851,7 @@
         { t: "Hábitos que evitam dor de cabeça",
           p: "git status antes de qualquer comando. Mensagens de commit claras. Branch separada pra cada feature. Push pelo menos uma vez por dia. Esses 4 hábitos resolvem 90% dos problemas." }
       ] },
-    { n: 13, t: "Deploy automático", star: false,
+    { n: 15, t: "Deploy automático", star: false,
       bullets: [
         { t: "O conceito: cada push vira um deploy",
           p: "A ideia central do deploy automático é amarrar a plataforma de hospedagem ao repositório. Quando você dá push na main (ou em qualquer branch configurada), a aplicação atualiza sozinha." },
@@ -812,7 +870,7 @@
         { t: "Quando configurar deploy automático",
           p: "Logo depois de criar o repositório do projeto. Custa 5 minutos e elimina pra sempre o ritual manual de subir arquivos via FTP ou rebuild local." }
       ] },
-    { n: 14, t: "GitHub Pages", star: false,
+    { n: 16, t: "GitHub Pages", star: false,
       bullets: [
         { t: "O que é GitHub Pages",
           p: "É hospedagem de sites estáticos grátis, direto a partir de um repositório do GitHub. URL própria no formato user.github.io/repo, ou domínio customizado se quiser." },
@@ -829,7 +887,7 @@
         { t: "Casos de uso ideais para vibecoder",
           p: "Portfólio, currículo online, documentação de uma lib que você criou, landing de validação de ideia, blog pessoal. Tudo grátis, sem cartão de crédito." }
       ] },
-    { n: 15, t: "GitHub Actions", star: false,
+    { n: 17, t: "GitHub Actions", star: false,
       bullets: [
         { t: "O que é GitHub Actions",
           p: "Automação que roda dentro do GitHub a cada evento (push, PR, agendamento, manual). Você define workflows em arquivos YAML dentro de .github/workflows/ e o GitHub executa em runners dele mesmo." },
@@ -855,7 +913,7 @@
         { t: "Marketplace: não reinvente a roda",
           p: "Antes de escrever Action do zero, procure no GitHub Marketplace. Tem ações prontas pra deploy, notificação, lint, deploy em cloud, tudo que você imaginar." }
       ] },
-    { n: 16, t: "Outros usos práticos (além de código)", star: false,
+    { n: 18, t: "Outros usos práticos (além de código)", star: false,
       bullets: [
         { t: "Git serve pra qualquer coisa baseada em arquivo de texto",
           p: "Não é \"ferramenta de programador\" — é versionamento de arquivos. Qualquer coisa que vire texto (JSON, YAML, Markdown, CSV pequeno) cabe num repositório, com histórico, branches e colaboração." },
@@ -872,7 +930,7 @@
         { t: "Documentação técnica e específica de cliente",
           p: "Documentação de API, runbooks, playbooks de incidente e materiais por cliente em Markdown versionado. Cada cliente vira uma pasta ou um repositório, e a evolução do entendimento fica registrada commit a commit." }
       ] },
-    { n: 17, t: "Perfil como portfólio", star: false,
+    { n: 19, t: "Perfil como portfólio", star: false,
       bullets: [
         { t: "O perfil GitHub como cartão de visita técnico",
           p: "Pra quem trabalha com código (mesmo que seja só vibe coding), o perfil do GitHub fala mais que LinkedIn. Recrutadores e clientes olham ali primeiro." },
@@ -889,7 +947,7 @@
         { t: "Repositórios privados ainda contam",
           p: "Trabalho em repositórios privados também conta no calendário se você habilitar a opção em Settings → Profile. Útil pra mostrar que você está produzindo, mesmo que o código não esteja público." }
       ] },
-    { n: 18, t: "Caminho de evolução", star: false,
+    { n: 20, t: "Caminho de evolução", star: false,
       bullets: [
         { t: "Etapa 1: solo, ciclo simples",
           p: "Começa com o ciclo básico em main: status, add, commit, push. Sem branch, sem PR. Já é infinitamente melhor que pasta versionada manualmente." },
@@ -910,7 +968,7 @@
         { t: "Adote cada etapa quando o projeto pedir",
           p: "Não pule pra etapa 8 no primeiro projeto. Adicionar complexidade cedo demais atrapalha mais do que ajuda. Escale o processo junto com o projeto." }
       ] },
-    { n: 19, t: "Desafio: vazei uma chave, e agora?", star: true,
+    { n: 21, t: "Desafio: vazei uma chave, e agora?", star: true,
       bullets: [
         { t: "Por que apagar e commitar de novo NÃO resolve",
           p: "Apagar a chave num commit novo só esconde a linha atual. O commit anterior continua no histórico, acessível por hash, fork, clone antigo ou cache de bot. Bots de scraping varrem o GitHub em segundos atrás de padrões tipo sk-..., AKIA..., ghp_... A chave já é considerada comprometida no momento que sai da sua máquina." },
@@ -938,66 +996,110 @@
       ] }
   ];
 
-  const appendix = {
-    t: "Apêndice — Principais comandos",
-    categories: [
-      { name: "Setup", cmds: [
-        { c: "git --version", d: "Verifica se o Git está instalado e qual versão" },
-        { c: "git config --global user.name \"nome\"", d: "Define seu nome para os commits" },
-        { c: "git config --global user.email \"email\"", d: "Define seu email para os commits" },
-        { c: "git config --global init.defaultBranch main", d: "Define main como branch padrão" },
-        { c: "ssh-keygen -t ed25519 -C \"email\"", d: "Gera chave SSH para autenticação" }
-      ] },
-      { name: "Repositório", cmds: [
-        { c: "git init", d: "Inicia um repositório no diretório atual" },
-        { c: "git clone <url>", d: "Clona um repositório remoto" },
-        { c: "git remote add origin <url>", d: "Conecta repositório local ao remoto" },
-        { c: "git remote -v", d: "Lista os repositórios remotos configurados" }
-      ] },
-      { name: "Ciclo diário", cmds: [
-        { c: "git status", d: "Mostra o estado dos arquivos" },
-        { c: "git add <arquivo>", d: "Adiciona arquivo ao staging" },
-        { c: "git add .", d: "Adiciona todas as mudanças ao staging" },
-        { c: "git commit -m \"msg\"", d: "Cria um commit com mensagem" },
-        { c: "git commit -am \"msg\"", d: "Adiciona e commita arquivos já versionados" },
-        { c: "git push", d: "Envia commits ao remoto" },
-        { c: "git pull", d: "Baixa e mescla mudanças do remoto" },
-        { c: "git fetch", d: "Baixa mudanças sem mesclar" }
-      ] },
-      { name: "Histórico", cmds: [
-        { c: "git log", d: "Mostra histórico de commits" },
-        { c: "git log --oneline", d: "Histórico compacto, um commit por linha" },
-        { c: "git log --oneline --graph", d: "Histórico visual com branches" },
-        { c: "git diff", d: "Mostra mudanças não commitadas (working tree vs staging)" },
-        { c: "git diff --staged", d: "Mostra mudanças no staging (índice vs último commit)" },
-        { c: "git diff HEAD", d: "Tudo que difere do último commit (staged + unstaged)" },
-        { c: "git show <hash>", d: "Mostra detalhes de um commit específico" }
-      ] },
-      { name: "Branches", cmds: [
-        { c: "git branch", d: "Lista branches locais" },
-        { c: "git branch -a", d: "Lista branches locais e remotas" },
-        { c: "git checkout -b <nome>", d: "Cria e muda para nova branch" },
-        { c: "git checkout <branch>", d: "Muda para branch existente" },
-        { c: "git switch <branch>", d: "Alternativa moderna ao checkout" },
-        { c: "git merge <branch>", d: "Mescla branch na atual" },
-        { c: "git branch -d <nome>", d: "Deleta branch local" }
-      ] },
-      { name: "Desfazer", cmds: [
-        { c: "git restore <arquivo>", d: "Descarta mudanças não commitadas" },
-        { c: "git restore --staged <arquivo>", d: "Remove arquivo do staging" },
-        { c: "git revert <hash>", d: "Cria commit que desfaz outro (seguro)" },
-        { c: "git reset --soft <hash>", d: "Volta o ponteiro mantendo mudanças" },
-        { c: "git reset --hard <hash>", d: "Volta o ponteiro descartando mudanças" },
-        { c: "git stash", d: "Guarda mudanças temporariamente" },
-        { c: "git stash pop", d: "Restaura mudanças guardadas" }
-      ] },
-      { name: "Submodules", cmds: [
-        { c: "git submodule add <url> <pasta>", d: "Adiciona submódulo ao projeto" },
-        { c: "git submodule update --init --recursive", d: "Inicializa submódulos após clone" },
-        { c: "git submodule update --remote", d: "Atualiza submódulos para última versão" }
-      ] }
-    ]
-  };
+  const appendices = [
+    {
+      t: "Apêndice — Principais comandos",
+      categories: [
+        { name: "Setup", cmds: [
+          { c: "git --version", d: "Verifica se o Git está instalado e qual versão" },
+          { c: "git config --global user.name \"nome\"", d: "Define seu nome para os commits" },
+          { c: "git config --global user.email \"email\"", d: "Define seu email para os commits" },
+          { c: "git config --global init.defaultBranch main", d: "Define main como branch padrão" },
+          { c: "ssh-keygen -t ed25519 -C \"email\"", d: "Gera chave SSH para autenticação" }
+        ] },
+        { name: "Repositório", cmds: [
+          { c: "git init", d: "Inicia um repositório no diretório atual" },
+          { c: "git clone <url>", d: "Clona um repositório remoto" },
+          { c: "git remote add origin <url>", d: "Conecta repositório local ao remoto" },
+          { c: "git remote -v", d: "Lista os repositórios remotos configurados" }
+        ] },
+        { name: "Ciclo diário", cmds: [
+          { c: "git status", d: "Mostra o estado dos arquivos" },
+          { c: "git add <arquivo>", d: "Adiciona arquivo ao staging" },
+          { c: "git add .", d: "Adiciona todas as mudanças ao staging" },
+          { c: "git commit -m \"msg\"", d: "Cria um commit com mensagem" },
+          { c: "git commit -am \"msg\"", d: "Adiciona e commita arquivos já versionados" },
+          { c: "git push", d: "Envia commits ao remoto" },
+          { c: "git pull", d: "Baixa e mescla mudanças do remoto" },
+          { c: "git fetch", d: "Baixa mudanças sem mesclar" }
+        ] },
+        { name: "Histórico", cmds: [
+          { c: "git log", d: "Mostra histórico de commits" },
+          { c: "git log --oneline", d: "Histórico compacto, um commit por linha" },
+          { c: "git log --oneline --graph", d: "Histórico visual com branches" },
+          { c: "git diff", d: "Mostra mudanças não commitadas (working tree vs staging)" },
+          { c: "git diff --staged", d: "Mostra mudanças no staging (índice vs último commit)" },
+          { c: "git diff HEAD", d: "Tudo que difere do último commit (staged + unstaged)" },
+          { c: "git show <hash>", d: "Mostra detalhes de um commit específico" }
+        ] },
+        { name: "Branches", cmds: [
+          { c: "git branch", d: "Lista branches locais" },
+          { c: "git branch -a", d: "Lista branches locais e remotas" },
+          { c: "git checkout -b <nome>", d: "Cria e muda para nova branch" },
+          { c: "git checkout <branch>", d: "Muda para branch existente" },
+          { c: "git switch <branch>", d: "Alternativa moderna ao checkout" },
+          { c: "git merge <branch>", d: "Mescla branch na atual" },
+          { c: "git branch -d <nome>", d: "Deleta branch local" }
+        ] },
+        { name: "Desfazer", cmds: [
+          { c: "git restore <arquivo>", d: "Descarta mudanças não commitadas" },
+          { c: "git restore --staged <arquivo>", d: "Remove arquivo do staging" },
+          { c: "git revert <hash>", d: "Cria commit que desfaz outro (seguro)" },
+          { c: "git reset --soft <hash>", d: "Volta o ponteiro mantendo mudanças" },
+          { c: "git reset --hard <hash>", d: "Volta o ponteiro descartando mudanças" },
+          { c: "git stash", d: "Guarda mudanças temporariamente" },
+          { c: "git stash pop", d: "Restaura mudanças guardadas" }
+        ] },
+        { name: "Submodules", cmds: [
+          { c: "git submodule add <url> <pasta>", d: "Adiciona submódulo ao projeto" },
+          { c: "git submodule update --init --recursive", d: "Inicializa submódulos após clone" },
+          { c: "git submodule update --remote", d: "Atualiza submódulos para última versão" }
+        ] }
+      ]
+    },
+    {
+      t: "Apêndice — Termos comuns",
+      categories: [
+        { name: "Padrões de nome em repositórios", cmds: [
+          { c: "awesome-<tema>", d: "Lista curada de recursos sobre um tema (awesome-python, awesome-self-hosted, awesome-llm)" },
+          { c: "<x>-boilerplate", d: "Esqueleto inicial pronto pra clonar e adaptar (next-boilerplate, react-native-boilerplate)" },
+          { c: "<x>-starter / <x>-starter-kit", d: "Sinônimo de boilerplate, mais comum em ecossistemas JS/TS" },
+          { c: "<x>-template", d: "Repositório marcado como template — GitHub permite criar novos a partir dele com 1 clique" },
+          { c: "<x>-cheatsheet", d: "Resumo visual ou colinha rápida de uma tecnologia" },
+          { c: "<x>-cookbook", d: "Coletânea de receitas práticas pra problemas comuns" },
+          { c: "build-your-own-<x>", d: "Tutoriais que ensinam a construir versões simples de tecnologias famosas" },
+          { c: "free-<x>", d: "Listas de recursos gratuitos (free-programming-books, free-for-dev)" },
+          { c: "30-days-of-<x>", d: "Desafios estruturados em 30 dias pra aprender uma tecnologia" },
+          { c: "the-art-of-<x> / the-book-of-<x>", d: "Livros open source ou compilações longas em formato de livro" },
+          { c: "<lib>.js / <lib>-py", d: "Sufixos comuns indicando porte da lib pra outra linguagem" },
+          { c: "monorepo / micro-<x>", d: "Convenções de nome que sinalizam arquitetura — mono = tudo junto, micro = fragmentado" }
+        ] }
+      ]
+    },
+    {
+      t: "Apêndice — Links úteis",
+      categories: [
+        { name: "Descoberta e análise de repositórios", cmds: [
+          { c: "github.com/trending", d: "Repositórios em alta no momento, com filtro por linguagem e período" },
+          { c: "github.com/topics", d: "Navegação por tópicos e tags — encontre alternativas open source (ex: topic:notion)" },
+          { c: "star-history.com", d: "Curva temporal de stars de qualquer repositório — mostra se está crescendo ou abandonado" },
+          { c: "ossinsight.io", d: "Analytics profundo de OSS: trending, comparação de repos, métricas de saúde" },
+          { c: "gitstar-ranking.com", d: "Top repositórios e usuários do GitHub por número de stars" },
+          { c: "deepwiki.com/<owner>/<repo>", d: "Wiki gerado por IA de qualquer repositório público — troca github.com por deepwiki.com" },
+          { c: "github.com/abhigyanpatwari/GitNexus", d: "Knowledge graph + servidor MCP pra dar contexto arquitetural pra IAs de coding" }
+        ] },
+        { name: "Ferramentas e referências", cmds: [
+          { c: "gitignore.io", d: "Gera .gitignore pronto baseado em linguagem, framework e IDE" },
+          { c: "shields.io", d: "Cria badges (versão, build, downloads, licença) pra colocar no README" },
+          { c: "rtyley.github.io/bfg-repo-cleaner", d: "BFG Repo-Cleaner: remove secrets do histórico Git" },
+          { c: "github.com/newren/git-filter-repo", d: "Alternativa moderna e oficialmente recomendada ao git-filter-branch" },
+          { c: "github.com/gitleaks/gitleaks", d: "Scanner de secrets pra rodar como pre-commit ou em CI" },
+          { c: "docs.github.com", d: "Documentação oficial — referência pra qualquer feature do GitHub" },
+          { c: "github.com/marketplace", d: "Marketplace de Actions e apps pra automações no GitHub" }
+        ] }
+      ]
+    }
+  ];
 
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -1012,8 +1114,15 @@
     const q = new URLSearchParams(window.location.search);
     const b = (q.get('block') || q.get('b') || '').trim().toLowerCase();
     const open = parseOpenIndices(q);
-    if (b === 'appendix' || b === 'a') {
-      return { mode: 'appendix', open: [] };
+    // Apêndice: aceita 'a1', 'a2', ..., e legado 'appendix'/'a' (→ primeiro)
+    const appMatch = b.match(/^a(\d*)$/);
+    if (b === 'appendix' || appMatch) {
+      let appIdx = 0;
+      if (appMatch && appMatch[1]) {
+        const n = parseInt(appMatch[1], 10) - 1;
+        if (n >= 0 && n < appendices.length) appIdx = n;
+      }
+      return { mode: 'appendix', appIdx, open: [] };
     }
     const num = parseInt(b, 10);
     if (!isNaN(num) && num > 0) {
@@ -1023,9 +1132,9 @@
     return { mode: 'node', idx: 0, open };
   }
 
-  function syncUrlAppendix() {
+  function syncUrlAppendix(appIdx) {
     const u = new URL(window.location.href);
-    u.searchParams.set('block', 'appendix');
+    u.searchParams.set('block', 'a' + (appIdx + 1));
     u.searchParams.delete('open');
     u.searchParams.delete('o');
     history.replaceState(null, '', u.pathname + u.search + u.hash);
@@ -1234,12 +1343,17 @@
   });
 
   const appendixEl = document.getElementById('mm-appendix');
-  const appNode = document.createElement('div');
-  appNode.className = 'mm-node';
-  appNode.dataset.idx = 'appendix';
-  appNode.innerHTML = `<span class="mm-num">A</span><span class="mm-title">Apêndice — Principais comandos</span>`;
-  appNode.addEventListener('click', () => renderAppendix());
-  appendixEl.appendChild(appNode);
+  appendices.forEach((app, ai) => {
+    const appNode = document.createElement('div');
+    appNode.className = 'mm-node';
+    appNode.dataset.idx = 'appendix-' + ai;
+    const label = 'A' + (ai + 1);
+    // Tira o "Apêndice — " do título pra caber bem no menu
+    const shortTitle = app.t.replace(/^Apêndice\s*[—-]\s*/, '');
+    appNode.innerHTML = `<span class="mm-num">${escapeHtml(label)}</span><span class="mm-title">${escapeHtml(shortTitle)}</span>`;
+    appNode.addEventListener('click', () => renderAppendix(ai));
+    appendixEl.appendChild(appNode);
+  });
 
   function render(idx, openIndices = []) {
     document.querySelectorAll('.mm-node').forEach(n => n.classList.toggle('active', n.dataset.idx == idx));
@@ -1383,14 +1497,16 @@
     syncUrlNode(idx, collectOpenSubIndices());
   }
 
-  function renderAppendix() {
-    document.querySelectorAll('.mm-node').forEach(n => n.classList.toggle('active', n.dataset.idx === 'appendix'));
+  function renderAppendix(appIdx) {
+    const ai = (typeof appIdx === 'number' && appIdx >= 0 && appIdx < appendices.length) ? appIdx : 0;
+    const app = appendices[ai];
+    document.querySelectorAll('.mm-node').forEach(n => n.classList.toggle('active', n.dataset.idx === 'appendix-' + ai));
     const panel = document.getElementById('mm-panel');
     let html = `
-      <div class="mm-eyebrow">Apêndice</div>
-      <h2 class="mm-h">${escapeHtml(appendix.t)}</h2>
+      <div class="mm-eyebrow">Apêndice ${ai + 1}</div>
+      <h2 class="mm-h">${escapeHtml(app.t)}</h2>
     `;
-    appendix.categories.forEach(cat => {
+    app.categories.forEach(cat => {
       html += `<div class="mm-cat"><div class="mm-cat-h">${escapeHtml(cat.name)}</div><table class="mm-cmd-table">`;
       cat.cmds.forEach(c => {
         html += `<tr><td><span class="mm-cmd-code">${escapeHtml(c.c)}</span></td><td class="mm-cmd-desc">${escapeHtml(c.d)}</td></tr>`;
@@ -1398,13 +1514,13 @@
       html += `</table></div>`;
     });
     panel.innerHTML = html;
-    syncUrlAppendix();
+    syncUrlAppendix(ai);
   }
 
   function applyRouteFromLocation() {
     const st = parseUrlState();
     if (st.mode === 'appendix') {
-      renderAppendix();
+      renderAppendix(st.appIdx);
     } else {
       render(st.idx, st.open);
     }
