@@ -88,19 +88,28 @@
     margin: 0;
   }
 
-  .page-repo {
+  .page-links {
     margin: 12px 0 0;
     font-size: 13px;
     color: var(--text-secondary);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    align-items: center;
   }
 
-  .page-repo a {
+  .page-links-sep {
+    color: var(--text-tertiary);
+    user-select: none;
+  }
+
+  .page-links a {
     color: var(--info);
     text-decoration: none;
     border-bottom: 1px solid transparent;
   }
 
-  .page-repo a:hover {
+  .page-links a:hover {
     border-bottom-color: var(--info);
   }
 
@@ -565,9 +574,11 @@
     <div class="page-eyebrow">Playbook</div>
     <h1 class="page-title">Masterclass Git &amp; GitHub para Vibecoders</h1>
     <p class="page-subtitle">Mapa mental interativo · clique nos blocos e nos subtópicos para expandir</p>
-    <p class="page-repo">
+    <div class="page-links">
       <a href="https://github.com/ffmenezes/masterclass-github" target="_blank" rel="noopener noreferrer">github.com/ffmenezes/masterclass-github</a>
-    </p>
+      <span class="page-links-sep" aria-hidden="true">·</span>
+      <a href="https://notebooklm.google.com/notebook/28a27a02-24d3-4990-8ac6-c98b09731302" target="_blank" rel="noopener noreferrer">NotebookLM</a>
+    </div>
   </div>
   <div class="mm-wrap">
     <div class="mm-tree">
